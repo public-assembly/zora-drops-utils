@@ -1,0 +1,30 @@
+{
+  "name": "@public-assembly/zora-drops-utils",
+  "version": "0.0.1",
+  "description": "Example package with some web3 peer dependencies",
+  "main": "dist/public-assembly-zora-drops-utils.cjs.js",
+  "module": "dist/public-assembly-zora-drops-utils.esm.js",
+  "author": "Public Assembly",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/public-assembly/zora-drops-utils.git",
+    "directory": "packages/zora-drops-utils"
+  },
+  "files": [
+    "/dist"
+  ],
+  "peerDependencies": {
+    "@zoralabs/nft-hooks": "^1.1.9",
+    "@zoralabs/zdk": "^2.1.8",
+    "ethers": "^5.7.1",
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0",
+    "swr": "^1.3.0",
+    "wagmi": "^0.6.6"
+  },
+  "devDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
