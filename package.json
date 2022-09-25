@@ -1,8 +1,8 @@
 {
   "private": true,
-  "name": "assemble-package",
+  "name": "zora-drops-utils",
   "version": "1.0.0",
-  "description": "NPM package boilerplate",
+  "description": "Library of React hooks, and utility fuctions to interact with to Zora's NFT Drop Media Contracts",
   "main": "index.js",
   "author": "Public Assembly",
   "license": "MIT",
