@@ -1,5 +1,5 @@
 import React from 'react'
-import { returnDropEndpoint, useDropsRequest } from '@public-assembly/zora-drops-utils'
+import { returnDropEndpoint, useDropsRequest, useSWRDropsRequest } from '@public-assembly/zora-drops-utils'
 import { RawDisplayer } from './RawDisplayer'
 
 const goreliEndpoint = returnDropEndpoint('5')
@@ -18,6 +18,11 @@ export function TestComponent() {
     contractAddress: address,
     networkId: '1'
   })
+
+  const { data: swrData } = useSWRDropsRequest({
+    contractAddress: address,
+    networkId: '1'
+  })
   
   const handleSetAddress = React.useCallback((event: any) => {
     setAddress(event?.target.value)
@@ -25,6 +30,7 @@ export function TestComponent() {
 
   return (
     <div className="flex flex-col">
+      <h1 className="text-xl">Endpoints:</h1>
       <p>{goreliEndpoint}</p>
       <p>{mainnetEndpoint}</p>
       <br />
@@ -38,7 +44,13 @@ export function TestComponent() {
         )}
       </select>
       <br />
+      <h1 className="text-xl">Simple Request Hook:</h1>
+      <br />
       {data ? <RawDisplayer data={data} /> : <p>...loading</p>}
+      <br />
+      <h1 className="text-xl">SWR Request Hook:</h1>
+      <br />
+      {swrData ? <RawDisplayer data={swrData} /> : <p>...loading</p>}
     </div>
   )
 }

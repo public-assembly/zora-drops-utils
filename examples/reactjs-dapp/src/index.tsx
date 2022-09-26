@@ -7,7 +7,6 @@ const root = ReactDOM.createRoot(domContainer)
 root.render(
   <App>
     <>
-      <h1>Endpoints:</h1>
       <TestComponent />
     </>
   </App>
