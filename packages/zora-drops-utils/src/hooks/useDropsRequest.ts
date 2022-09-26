@@ -1,11 +1,6 @@
 import React from 'react'
-import { dropsRequests } from '../data/fetchDropsQueries'
-import { ChainIds } from '../constants'
-
-export type DropsRequestProps = {
-  contractAddress: string
-  networkId: ChainIds
-}
+import { EDITION_QUERY, dropsFetcher } from '../data'
+import { DropsRequestProps } from '../typings'
 
 export function useDropsRequest({ contractAddress, networkId = '1' }: DropsRequestProps) {
   const [data, setData] = React.useState<any>(undefined)
@@ -15,7 +10,7 @@ export function useDropsRequest({ contractAddress, networkId = '1' }: DropsReque
     setData(undefined)
 
     async function getDropsData() {
-      await dropsRequests(networkId, contractAddress)
+      await dropsFetcher(networkId, contractAddress, EDITION_QUERY)
         .then((res) => {
           setData(res)
         })

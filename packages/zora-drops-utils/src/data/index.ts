@@ -1,2 +1,2 @@
 export * from './dropsQuery'
-export * from './fetchDropsQueries'
+export * from './dropsFetcher'
