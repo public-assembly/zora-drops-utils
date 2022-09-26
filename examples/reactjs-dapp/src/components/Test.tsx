@@ -9,20 +9,23 @@ const TEST_CONTRACTS = [
   '0xb7a791c3b5a0aa833e638250f982ebd29194f02c',
   '0x674fb9ed86b847db9aee0a19e9055d5d2c0e6cc4',
   '0x2f0146ca3c62a33177959565ae9df2f86cf01551',
+  '0x2f0146ca3c62a33177959565ae9df2f86cf015',
 ]
 
 export function TestComponent() {
   const [address, setAddress] = React.useState(TEST_CONTRACTS[0])
 
-  const { data } = useDropsRequest({
+  const { data, error, isLoading, isValidAddress } = useDropsRequest({
     contractAddress: address,
     networkId: '1'
   })
 
-  const { data: swrData } = useSWRDropsRequest({
+  const { data: swrData, error: swrError, isLoading: swrLoading, isValidAddress: swrValid } = useSWRDropsRequest({
     contractAddress: address,
     networkId: '1'
   })
+
+  console.log(isLoading)
   
   const handleSetAddress = React.useCallback((event: any) => {
     setAddress(event?.target.value)
@@ -46,11 +49,14 @@ export function TestComponent() {
       <br />
       <h1 className="text-xl">Simple Request Hook:</h1>
       <br />
-      {data ? <RawDisplayer data={data} /> : <p>...loading</p>}
+      {!isLoading ? <RawDisplayer data={{data, error, isValidAddress}} /> : <p>...loading</p>}
       <br />
       <h1 className="text-xl">SWR Request Hook:</h1>
       <br />
-      {swrData ? <RawDisplayer data={swrData} /> : <p>...loading</p>}
+      {!swrLoading ? <RawDisplayer data={{ swrData, swrError, swrValid }} /> : <p>...loading</p>}
+      <br />
+      <br />
+      <br />
     </div>
   )
 }
