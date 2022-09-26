@@ -1,5 +1,5 @@
 import React from 'react'
-import { returnDropEndpoint, dropsRequests } from '@public-assembly/zora-drops-utils'
+import { returnDropEndpoint, useDropsRequest } from '@public-assembly/zora-drops-utils'
 import { RawDisplayer } from './RawDisplayer'
 
 const goreliEndpoint = returnDropEndpoint('5')
@@ -11,19 +11,12 @@ const TEST_CONTRACTS = [
 ]
 
 export function TestComponent() {
-  const [data, setData] = React.useState<any>(undefined)
   const [address, setAddress] = React.useState(TEST_CONTRACTS[0])
 
-  React.useMemo(async () => {
-    setData(undefined)
-    await dropsRequests('1', address)
-      .then((res) => {
-        setData(res)
-      })
-      .catch((error) =>
-        console.error(error)
-      )
-  }, [address])
+  const { data } = useDropsRequest({
+    contractAddress: address,
+    networkId: '1'
+  })
   
   const handleSetAddress = React.useCallback((event: any) => {
     setAddress(event?.target.value)
