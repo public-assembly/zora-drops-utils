@@ -9,17 +9,27 @@ export type DropsRequestProps = {
 
 export function useDropsRequest({ contractAddress, networkId = '1' }: DropsRequestProps) {
   const [data, setData] = React.useState<any>(undefined)
+  const [error, setError] = React.useState<any>(undefined)
 
-  React.useMemo(async () => {
+  React.useEffect(() => {
     setData(undefined)
-    await dropsRequests(networkId, contractAddress)
-      .then((res) => {
-        setData(res)
-      })
-      .catch((error) => console.error(error))
+
+    async function getDropsData() {
+      await dropsRequests(networkId, contractAddress)
+        .then((res) => {
+          setData(res)
+        })
+        .catch((error) => {
+          setError(error)
+          console.error(error)
+        })
+    }
+
+    getDropsData()
   }, [contractAddress])
 
   return {
     data: data,
+    error: error,
   }
 }

@@ -8,6 +8,7 @@ const mainnetEndpoint = returnDropEndpoint('1')
 const TEST_CONTRACTS = [
   '0xb7a791c3b5a0aa833e638250f982ebd29194f02c',
   '0x674fb9ed86b847db9aee0a19e9055d5d2c0e6cc4',
+  '0x2f0146ca3c62a33177959565ae9df2f86cf01551',
 ]
 
 export function TestComponent() {
