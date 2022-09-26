@@ -25,11 +25,7 @@ export const EDITIONS_STYLE_CONTRACT_METADATA = gql`
 
 export const EDITION_QUERY = gql`
   query editionsStyleDropMetadataerc721Drops($collectionAddress: String!) {
-    erc721Drop(
-      orderBy: createdAt
-      orderDirection: desc
-      where: { address: $collectionAddress }
-    ) {
+    erc721Drop(id: $collectionAddress) {
       ...ERC721Fields
     }
   }

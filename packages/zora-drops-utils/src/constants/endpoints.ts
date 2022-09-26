@@ -1,11 +1,13 @@
-interface ChainIds {
+interface ChainIdKey {
   [key: string]: string
 }
 
-export const DROPS_SUBGRAPH_URLS: ChainIds = {
+export const DROPS_SUBGRAPH_URLS: ChainIdKey = {
   1: 'https://api.thegraph.com/subgraphs/name/iainnash/zora-drops-mainnet',
   5: 'https://api.thegraph.com/subgraphs/name/iainnash/erc721drop-goerli',
 }
+
+export type ChainIds = '1' | '5'
 
 export const returnDropEndpoint = (
   /**
