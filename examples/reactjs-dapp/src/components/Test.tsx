@@ -1,6 +1,8 @@
 import React from 'react'
-import { returnDropEndpoint, useDropsRequest, useSWRDropsRequest } from '@public-assembly/zora-drops-utils'
+import { returnDropEndpoint, DropsContextProvider } from '@public-assembly/zora-drops-utils'
 import { RawDisplayer } from './RawDisplayer'
+import { TestProviderConsumer } from './TestProviderConsumer'
+import { TestHooks } from './TestingHooks'
 
 const goreliEndpoint = returnDropEndpoint('5')
 const mainnetEndpoint = returnDropEndpoint('1')
@@ -14,31 +16,22 @@ const TEST_CONTRACTS = [
 
 export function TestComponent() {
   const [address, setAddress] = React.useState(TEST_CONTRACTS[0])
-
-  const { data, error, isLoading, isValidAddress } = useDropsRequest({
-    contractAddress: address,
-    networkId: '1'
-  })
-
-  const { data: swrData, error: swrError, isLoading: swrLoading, isValidAddress: swrValid } = useSWRDropsRequest({
-    contractAddress: address,
-    networkId: '1'
-  })
-
-  console.log(isLoading)
-  
   const handleSetAddress = React.useCallback((event: any) => {
     setAddress(event?.target.value)
   }, [setAddress])
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col p-4 border border-solid border-1 rounded-xl">
       <h1 className="text-xl">Endpoints:</h1>
-      <p>{goreliEndpoint}</p>
-      <p>{mainnetEndpoint}</p>
       <br />
+      <RawDisplayer data={{
+        mainnet: mainnetEndpoint,
+        goerli: goreliEndpoint
+      }} />
+      <br />
+      <h1 className="text-xl pb-2">Select A Contract:</h1>
       <select
-        className="border border-solid border-1 p-2 rounded-md"
+        className="border border-solid border-1 p-2 border-black rounded-md"
         onChange={handleSetAddress}
         value={address}
       >
@@ -47,16 +40,15 @@ export function TestComponent() {
         )}
       </select>
       <br />
-      <h1 className="text-xl">Simple Request Hook:</h1>
+      <hr className="border border-b-0 border-dashed"/>
       <br />
-      {!isLoading ? <RawDisplayer data={{data, error, isValidAddress}} /> : <p>...loading</p>}
+      <DropsContextProvider contractAddress={address}>
+        <TestProviderConsumer />
+      </DropsContextProvider>
       <br />
-      <h1 className="text-xl">SWR Request Hook:</h1>
+      <hr className="border border-b-0 border-dashed"/>
       <br />
-      {!swrLoading ? <RawDisplayer data={{ swrData, swrError, swrValid }} /> : <p>...loading</p>}
-      <br />
-      <br />
-      <br />
+      <TestHooks contractAddress={address} />
     </div>
   )
 }
