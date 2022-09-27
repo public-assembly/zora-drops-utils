@@ -1,6 +1,6 @@
 import React from 'react'
 import { returnDropEndpoint, DropsContextProvider } from '@public-assembly/zora-drops-utils'
-import { RawDisplayer } from './RawDisplayer'
+import { RawDisplayer } from '../../../../reactjs-dapp/src/components/RawDisplayer'
 import { TestProviderConsumer } from './TestProviderConsumer'
 import { TestHooks } from './TestingHooks'
 
@@ -49,6 +49,9 @@ export function TestComponent() {
       <hr className="border border-b-0 border-dashed"/>
       <br />
       <TestHooks contractAddress={address} />
+      <br />
+      <br />
+      <br />
     </div>
   )
 }
