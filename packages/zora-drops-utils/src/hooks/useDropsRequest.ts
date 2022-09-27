@@ -18,7 +18,6 @@ export function useDropsRequest({ contractAddress, networkId = '1' }: DropsReque
       await dropsFetcher(networkId, contractAddress, EDITION_QUERY)
         .then((res) => {
           setData(res)
-          console.log(data)
           setIsLoading(false)
         })
         .catch((error) => {

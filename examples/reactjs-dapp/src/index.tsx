@@ -8,6 +8,9 @@ root.render(
   <App>
     <>
       <TestComponent />
+      <br />
+      <br />
+      <br />
     </>
   </App>
 )
