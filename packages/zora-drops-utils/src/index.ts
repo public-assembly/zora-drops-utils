@@ -2,5 +2,5 @@ export { EDITIONS_STYLE_CONTRACT_METADATA, EDITION_QUERY, dropsFetcher } from '.
 export { DROPS_SUBGRAPH_URLS, returnDropEndpoint } from './constants'
 export { useDropsRequest, useSWRDropsRequest } from './hooks'
 export { DropsContextProvider, useDropsContextProvider } from './context'
-
+export { addIPFSGateway } from './lib/addIPFSGateway'
 export type { DropsRequestProps } from './typings'
