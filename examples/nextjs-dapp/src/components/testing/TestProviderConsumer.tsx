@@ -1,4 +1,4 @@
-import { RawDisplayer } from "./RawDisplayer";
+import { RawDisplayer } from "./../RawDisplayer";
 import { useDropsContextProvider } from "@public-assembly/zora-drops-utils";
 import { ProviderImage } from "./ProviderImage";
 
