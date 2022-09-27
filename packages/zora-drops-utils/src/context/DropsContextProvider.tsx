@@ -1,10 +1,9 @@
-import { ReactNode } from 'react'
-import { createContext, useContext } from 'react'
+import React from 'react'
 import { DropsRequestProps } from '../typings'
 import { useSWRDropsRequest } from '../hooks'
 
 export type DropsContextProps = {
-  children?: ReactNode
+  children?: React.ReactNode
 }
 
 export type DropsContextReturnTypes = {
@@ -15,7 +14,7 @@ export type DropsContextReturnTypes = {
   isValidAddress?: boolean
 }
 
-const DropsContext = createContext<DropsContextReturnTypes>({
+const DropsContext = React.createContext<DropsContextReturnTypes>({
   contractAddress: undefined,
   data: null,
   error: undefined,
@@ -24,7 +23,7 @@ const DropsContext = createContext<DropsContextReturnTypes>({
 })
 
 export function useDropsContextProvider() {
-  return useContext(DropsContext)
+  return React.useContext(DropsContext)
 }
 
 export function DropsContextProvider({
