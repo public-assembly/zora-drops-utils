@@ -1,13 +1,13 @@
 import React from 'react'
-import { DropsRequestProps } from '../typings'
-import { useSWRDropsRequest } from '../hooks'
+import { DropsArrayRequestProps } from '../typings/requestTypes'
+import { useSWRDropsArray } from '../hooks'
 
 export type DropsContextProps = {
   children?: React.ReactNode
 }
 
 export type DropsContextReturnTypes = {
-  contractAddress?: string
+  contractAddresses?: string[]
   data?: any /* DAIN TODO - spec data return typings */
   error?: any
   isLoading?: boolean
@@ -15,7 +15,7 @@ export type DropsContextReturnTypes = {
 }
 
 const DropsContext = React.createContext<DropsContextReturnTypes>({
-  contractAddress: undefined,
+  contractAddresses: undefined,
   data: null,
   error: undefined,
   isLoading: undefined,
@@ -28,22 +28,26 @@ export function useDropsContextProvider() {
 
 export function DropsContextProvider({
   children,
-  contractAddress,
+  contractAddresses,
   networkId = '1',
-}: DropsContextProps & DropsRequestProps) {
-  const { data, error, isLoading, isValidAddress } = useSWRDropsRequest({
-    contractAddress: contractAddress,
+  refreshInterval = 2000,
+}: {
+  refreshInterval?: number
+} & DropsContextProps &
+  DropsArrayRequestProps) {
+  const { data, error, isLoading } = useSWRDropsArray({
+    contractAddresses: contractAddresses,
     networkId: networkId,
+    refreshInterval: refreshInterval,
   })
 
   return (
     <DropsContext.Provider
       value={{
-        contractAddress,
+        contractAddresses,
         data,
         error,
         isLoading,
-        isValidAddress,
       }}>
       {children}
     </DropsContext.Provider>

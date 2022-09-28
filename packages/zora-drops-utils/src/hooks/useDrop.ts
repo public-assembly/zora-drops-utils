@@ -3,7 +3,7 @@ import { EDITION_QUERY, dropsFetcher } from '../data'
 import { DropsRequestProps } from '../typings'
 import { useValidAddress } from './useValidAddress'
 
-export function useDropsRequest({ contractAddress, networkId = '1' }: DropsRequestProps) {
+export function useDrop({ contractAddress, networkId = '1' }: DropsRequestProps) {
   const [data, setData] = React.useState<any>(undefined)
   const [error, setError] = React.useState<any>(undefined)
   const [isLoading, setIsLoading] = React.useState(true)
