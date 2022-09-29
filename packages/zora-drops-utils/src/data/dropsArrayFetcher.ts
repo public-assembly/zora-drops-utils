@@ -9,7 +9,11 @@ export async function dropsArrayFetcher({
   try {
     const editions = await Promise.all(
       contractAddresses.map(async (contractAddress) => {
-        const metadata = await dropsFetcher(networkId, contractAddress, EDITION_QUERY)
+        const metadata = await dropsFetcher(
+          networkId,
+          contractAddress.toLowerCase(),
+          EDITION_QUERY
+        )
           .then((res) => {
             return res
           })

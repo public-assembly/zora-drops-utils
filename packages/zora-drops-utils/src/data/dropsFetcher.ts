@@ -7,7 +7,7 @@ export async function dropsFetcher(
   query: any
 ) {
   const variables = {
-    collectionAddress: collectionAddress,
+    collectionAddress: collectionAddress.toLowerCase(),
   }
 
   const endpoint = returnDropEndpoint(chainId)
