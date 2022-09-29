@@ -9,6 +9,7 @@ export const EDITIONS_STYLE_CONTRACT_METADATA = gql`
       publicSalePrice
       publicSaleStart
       publicSaleEnd
+      maxSalePurchasePerAddress
     }
     address
     maxSupply
