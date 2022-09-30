@@ -16,6 +16,7 @@
   ],
   "peerDependencies": {
     "@zoralabs/nft-drop-contracts": "^1.0.1",
+    "date-fns": "^2.29.3",
     "ethers": "^5.7.1",
     "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",
