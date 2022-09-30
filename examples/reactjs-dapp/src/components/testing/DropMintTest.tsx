@@ -1,5 +1,9 @@
 import React from "react";
-import { DropsContractProvider, useDropsContractProvider, addIPFSGateway } from "@public-assembly/zora-drops-utils";
+import {
+  DropsContractProvider,
+  useDropsContractProvider,
+  addIPFSGateway
+} from "@public-assembly/zora-drops-utils";
 
 function MintUI() {
   const {
@@ -7,6 +11,11 @@ function MintUI() {
     collectionAddress,
     mintQuantity,
     totalPrice,
+    transaction: {
+      purchaseLoading,
+      purchaseSuccess,
+      txHash,
+    },
     errors: {
       insufficientFunds
     },
@@ -43,9 +52,14 @@ function MintUI() {
           <p>Sold: {prettyInventory} NFTs</p>
           <p>Price: {totalPrice?.pretty}Ξ</p>
           <hr className="my-2"></hr>
-          <p>You Own: {walletBalance} NFT{`${walletBalance > 1 ? 's' : ''}`}</p>
+          <p>You Own: {walletBalance} NFT{`${walletBalance > 1 || walletBalance === 0 ? 's' : ''}`}</p>
         </div>
-        
+        <div>
+          {purchaseLoading ? 'Tx Processing' : ''}
+          {purchaseSuccess ? 'Minted!' : ''}
+          <br />
+          {txHash ? txHash : ''}
+        </div>
         {!walletLimit
           ? <div className="grid grid-cols-2 gap-2">
               <input
@@ -53,23 +67,26 @@ function MintUI() {
                 name="mint-quantity"
                 step="1"
                 min="1"
-                max={maxAmount}
+                max={maxAmount - Number(walletBalance)}
                 value={mintQuantity?.name}
                 onChange={setMintQuantity}
-                className="form-input px-4 py-3 rounded-full"
-              />
-                <button
-                  onClick={purchase}
-                  className={`
-                  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full
+                className={`
+                  form-input px-4 py-3 rounded-full
                   ${insufficientFunds ? 'pointer-events-none opacity-30' : ''}
-                  `}
-                >
-                  {!insufficientFunds
-                    ? <span>Purchase {mintQuantity?.name} NFT{`${mintQuantity?.queryValue > 1 ? 's' : ''}`}</span>
-                    : <span>Insufficient Funds</span>
-                  }
-                </button>
+                `}
+              />
+              <button
+                onClick={purchase}
+                className={`
+                bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full
+                ${insufficientFunds ? 'pointer-events-none opacity-30' : ''}
+                `}
+              >
+                {!insufficientFunds
+                  ? <span>Purchase {mintQuantity?.name} NFT{`${mintQuantity?.queryValue > 1 || walletBalance === 0 ? 's' : ''}`}</span>
+                  : <span>Insufficient Funds</span>
+                }
+              </button>
             </div>
           : <div className="py-4"><span>You have minted the maximum amount per wallet.</span></div>
         }
@@ -79,9 +96,14 @@ function MintUI() {
 }
 
 export function DropMintTest({collectionAddress}: {collectionAddress: string}) {
+  const successCallback = React.useCallback(() => {
+    console.log('MINTED IT')
+  }, [])
+  
   return (
     <DropsContractProvider
       collectionAddress={collectionAddress}
+      onSuccessCallback={successCallback}
     >
       <MintUI />
     </DropsContractProvider>

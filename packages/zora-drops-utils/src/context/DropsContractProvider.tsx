@@ -17,6 +17,7 @@ const DEFAULT_MINT_QUANTITY = {
 export type DropsContractProps = {
   children?: React.ReactNode
   collectionAddress?: string
+  onSuccessCallback?: () => void
 }
 
 export type DropsContractReturnTypes = {
@@ -24,6 +25,12 @@ export type DropsContractReturnTypes = {
   setMintQuantity?: React.ChangeEventHandler<HTMLInputElement>
   collectionData?: any
   collectionAddress?: string
+  transaction?: {
+    purchaseData: any
+    purchaseLoading: boolean
+    purchaseSuccess: boolean
+    txHash?: string
+  }
   totalPrice?: {
     raw: string | number
     pretty: string | number
@@ -54,6 +61,12 @@ export type DropsContractReturnTypes = {
 
 const DropsContractContext = React.createContext<DropsContractReturnTypes>({
   purchase: () => {},
+  transaction: {
+    purchaseData: undefined,
+    purchaseLoading: false,
+    purchaseSuccess: false,
+    txHash: undefined,
+  },
   setMintQuantity: undefined,
   collectionData: undefined,
   collectionAddress: undefined,
@@ -86,6 +99,7 @@ export function useDropsContractProvider() {
 export function DropsContractProvider({
   children,
   collectionAddress,
+  onSuccessCallback = () => {},
 }: DropsContractProps) {
   const { data: collectionData } = useSWRDrop({ contractAddress: collectionAddress })
 
@@ -118,8 +132,8 @@ export function DropsContractProvider({
     addressOrName: collectionAddress,
     contractInterface: zoraDropsABI.abi,
     functionName: 'balanceOf',
-    watch: true,
     args: [address],
+    watch: true,
   })
 
   const { config, error } = usePrepareContractWrite({
@@ -182,12 +196,28 @@ export function DropsContractProvider({
     }
   }, [totalPurchasePrice])
 
-  const { write: purchase } = useContractWrite(config)
+  const {
+    write: purchase,
+    data: purchaseData,
+    isLoading: purchaseLoading,
+    isSuccess: purchaseSuccess,
+  } = useContractWrite({
+    ...config,
+    onSuccess() {
+      ;() => onSuccessCallback()
+    },
+  })
 
   return (
     <DropsContractContext.Provider
       value={{
         purchase,
+        transaction: {
+          purchaseData,
+          purchaseLoading,
+          purchaseSuccess,
+          txHash: purchaseData && purchaseData?.hash,
+        },
         mintQuantity,
         setMintQuantity: handleUpdateMintQuantity,
         collectionData,
