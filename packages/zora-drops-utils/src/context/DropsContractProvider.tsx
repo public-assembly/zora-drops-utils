@@ -1,5 +1,10 @@
 import React from 'react'
-import { useContractWrite, usePrepareContractWrite } from 'wagmi'
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useContractRead,
+  useAccount,
+} from 'wagmi'
 import zoraDropsABI from '@zoralabs/nft-drop-contracts/dist/artifacts/ERC721Drop.sol/ERC721Drop.json'
 import { ethers } from 'ethers'
 import { useSWRDrop } from '../hooks'
@@ -34,11 +39,16 @@ export type DropsContractReturnTypes = {
   purchaseLimit?: {
     maxAmount?: number
     pastAmount?: boolean
+    prettyMaxAmount?: number | string
   }
   inventory?: {
     totalSupply?: number
     totalSold?: number
     prettyInventory?: string
+  }
+  balance?: {
+    walletLimit: boolean
+    walletBalance: number | string
   }
 }
 
@@ -56,11 +66,16 @@ const DropsContractContext = React.createContext<DropsContractReturnTypes>({
   purchaseLimit: {
     maxAmount: undefined,
     pastAmount: undefined,
+    prettyMaxAmount: undefined,
   },
   inventory: {
     totalSupply: undefined,
     totalSold: undefined,
     prettyInventory: undefined,
+  },
+  balance: {
+    walletLimit: false,
+    walletBalance: undefined,
   },
 })
 
@@ -97,6 +112,16 @@ export function DropsContractProvider({
     }
   }, [collectionData, collectionData?.salesConfig?.publicSalePrice, mintQuantity])
 
+  const { address } = useAccount()
+
+  const { data: balanceOf } = useContractRead({
+    addressOrName: collectionAddress,
+    contractInterface: zoraDropsABI.abi,
+    functionName: 'balanceOf',
+    watch: true,
+    args: [address],
+  })
+
   const { config, error } = usePrepareContractWrite({
     addressOrName: collectionAddress,
     contractInterface: zoraDropsABI.abi,
@@ -126,6 +151,7 @@ export function DropsContractProvider({
     return {
       maxAmount: maxPerAddress,
       pastAmount: mintQuantity.queryValue > Number(maxPerAddress),
+      prettyMaxAmount: maxPerAddress === '4294967295' ? '∞' : maxPerAddress,
     }
   }, [collectionData, mintQuantity])
 
@@ -136,6 +162,17 @@ export function DropsContractProvider({
       prettyInventory: `${collectionData?.totalMinted} / ${collectionData?.maxSupply}`,
     }
   }, [collectionData, mintQuantity])
+
+  const balance = React.useMemo(() => {
+    try {
+      return {
+        walletLimit: balanceOf >= purchaseLimit?.maxAmount,
+        walletBalance: balanceOf && balanceOf.toString(),
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }, [purchaseLimit, balanceOf])
 
   const prettyPurchasePrice = React.useMemo(() => {
     try {
@@ -165,6 +202,7 @@ export function DropsContractProvider({
         },
         purchaseLimit,
         inventory,
+        balance,
       }}>
       {children}
     </DropsContractContext.Provider>

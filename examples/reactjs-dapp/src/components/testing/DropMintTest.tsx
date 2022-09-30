@@ -12,9 +12,14 @@ function MintUI() {
     },
     purchaseLimit: {
       maxAmount,
+      prettyMaxAmount,
     },
     inventory: {
       prettyInventory
+    },
+    balance: {
+      walletBalance,
+      walletLimit
     },
     setMintQuantity,
     purchase
@@ -34,36 +39,41 @@ function MintUI() {
           <h3 className="text-lg">{data?.name}</h3>
           <p>{collectionAddress}</p>
           <p>{data?.editionMetadata?.description}</p>
-          <p>Maximum per address: {maxAmount}</p>
+          <p>Maximum per address: {prettyMaxAmount}</p>
           <p>Sold: {prettyInventory} NFTs</p>
           <p>Price: {totalPrice?.pretty}Ξ</p>
+          <hr className="my-2"></hr>
+          <p>You Own: {walletBalance} NFT{`${walletBalance > 1 ? 's' : ''}`}</p>
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          <input
-            type="number"
-            name="mint-quantity"
-            step="1"
-            min="1"
-            max={maxAmount}
-            value={mintQuantity?.name}
-            onChange={setMintQuantity}
-            className="form-input px-4 py-3 rounded-full"
-          />
-          <button
-            onClick={purchase}
-            className={`
-            bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full
-            ${insufficientFunds ? 'pointer-events-none opacity-30' : ''}
-            `}
-          >
-          {!insufficientFunds
-            ? <span>Purchase {mintQuantity?.name} NFT{`${mintQuantity?.queryValue > 1 ? 's' : ''}`}</span>
-            : <span>Insufficient Funds</span>
-          }
-          </button>
-        </div>
+        
+        {!walletLimit
+          ? <div className="grid grid-cols-2 gap-2">
+              <input
+                type="number"
+                name="mint-quantity"
+                step="1"
+                min="1"
+                max={maxAmount}
+                value={mintQuantity?.name}
+                onChange={setMintQuantity}
+                className="form-input px-4 py-3 rounded-full"
+              />
+                <button
+                  onClick={purchase}
+                  className={`
+                  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full
+                  ${insufficientFunds ? 'pointer-events-none opacity-30' : ''}
+                  `}
+                >
+                  {!insufficientFunds
+                    ? <span>Purchase {mintQuantity?.name} NFT{`${mintQuantity?.queryValue > 1 ? 's' : ''}`}</span>
+                    : <span>Insufficient Funds</span>
+                  }
+                </button>
+            </div>
+          : <div className="py-4"><span>You have minted the maximum amount per wallet.</span></div>
+        }
       </div>
-      
     </div>
   )
 }
