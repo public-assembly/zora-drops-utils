@@ -8,6 +8,7 @@ import {
 import zoraDropsABI from '@zoralabs/nft-drop-contracts/dist/artifacts/ERC721Drop.sol/ERC721Drop.json'
 import { ethers } from 'ethers'
 import { useSWRDrop } from '../hooks'
+import { dateFormat } from '../constants'
 
 const DEFAULT_MINT_QUANTITY = {
   name: '1',
@@ -57,6 +58,21 @@ export type DropsContractReturnTypes = {
     walletLimit: boolean
     walletBalance: number | string
   }
+  mintStatus?: {
+    text?: string
+    isEnded?: boolean
+    isActive?: boolean
+    startDate?: {
+      iso?: Date | string
+      unixtime?: number | string
+      pretty?: string
+    }
+    endDate?: {
+      iso?: Date | string
+      unixtime?: number | string
+      pretty?: string
+    }
+  }
 }
 
 const DropsContractContext = React.createContext<DropsContractReturnTypes>({
@@ -89,6 +105,21 @@ const DropsContractContext = React.createContext<DropsContractReturnTypes>({
   balance: {
     walletLimit: false,
     walletBalance: undefined,
+  },
+  mintStatus: {
+    text: undefined,
+    isEnded: undefined,
+    isActive: undefined,
+    startDate: {
+      iso: undefined,
+      unixtime: undefined,
+      pretty: undefined,
+    },
+    endDate: {
+      iso: undefined,
+      unixtime: undefined,
+      pretty: undefined,
+    },
   },
 })
 
@@ -208,9 +239,49 @@ export function DropsContractProvider({
     },
   })
 
+  const startDate = React.useMemo(() => {
+    if (collectionData?.salesConfig?.publicSaleStart) {
+      const isoDate = new Date(
+        Number(collectionData?.salesConfig?.publicSaleStart) * 1000
+      )
+      return {
+        iso: isoDate,
+        unixTime: collectionData?.salesConfig?.publicSaleStart,
+        pretty: `${isoDate.toLocaleString(...dateFormat)}`,
+      }
+    }
+  }, [collectionData?.salesConfig?.publicSaleStart])
+
+  const endDate = React.useMemo(() => {
+    if (collectionData?.salesConfig?.publicSaleEnd) {
+      const isoDate = new Date(Number(collectionData?.salesConfig?.publicSaleEnd) * 1000)
+      const formattedEndDate = `${isoDate.toLocaleString(...dateFormat)}`
+      return {
+        iso: isoDate,
+        unixTime: collectionData?.salesConfig?.publicSaleEnd,
+        pretty: formattedEndDate !== 'Invalid Date' ? formattedEndDate : undefined,
+      }
+    }
+  }, [collectionData?.salesConfig?.publicSaleEnd])
+
+  const isEnded = React.useMemo(() => {
+    const end = collectionData?.salesConfig?.publicSaleEnd
+    if (end) return Number(end) < Date.now()
+  }, [collectionData?.salesConfig?.publicSaleEnd])
+
+  const isActive = React.useMemo(() => {
+    const start = collectionData?.salesConfig?.publicSaleStart
+    if (start) return Number(start) <= Date.now()
+  }, [
+    collectionData?.salesConfig?.publicSaleEnd,
+    collectionData?.salesConfig?.publicSaleStart,
+    isEnded,
+  ])
+
   return (
     <DropsContractContext.Provider
       value={{
+        collectionData,
         purchase,
         transaction: {
           purchaseData,
@@ -220,7 +291,6 @@ export function DropsContractProvider({
         },
         mintQuantity,
         setMintQuantity: handleUpdateMintQuantity,
-        collectionData,
         totalPrice: {
           raw: totalPurchasePrice,
           pretty: prettyPurchasePrice,
@@ -233,6 +303,13 @@ export function DropsContractProvider({
         purchaseLimit,
         inventory,
         balance,
+        mintStatus: {
+          text: undefined,
+          isEnded: isEnded,
+          isActive: isActive,
+          startDate: startDate,
+          endDate: endDate,
+        },
       }}>
       {children}
     </DropsContractContext.Provider>
