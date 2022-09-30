@@ -58,9 +58,10 @@ export type DropsContractReturnTypes = {
     walletLimit: boolean
     walletBalance: number | string
   }
-  mintTiming?: {
+  mintStatus?: {
     text?: string
     isEnded?: boolean
+    isActive?: boolean
     startDate?: {
       iso?: Date | string
       unixtime?: number | string
@@ -105,9 +106,10 @@ const DropsContractContext = React.createContext<DropsContractReturnTypes>({
     walletLimit: false,
     walletBalance: undefined,
   },
-  mintTiming: {
+  mintStatus: {
     text: undefined,
     isEnded: undefined,
+    isActive: undefined,
     startDate: {
       iso: undefined,
       unixtime: undefined,
@@ -262,6 +264,20 @@ export function DropsContractProvider({
     }
   }, [collectionData?.salesConfig?.publicSaleEnd])
 
+  const isEnded = React.useMemo(() => {
+    const end = collectionData?.salesConfig?.publicSaleEnd
+    if (end) return Number(end) < Date.now()
+  }, [collectionData?.salesConfig?.publicSaleEnd])
+
+  const isActive = React.useMemo(() => {
+    const start = collectionData?.salesConfig?.publicSaleStart
+    if (start) return Number(start) <= Date.now()
+  }, [
+    collectionData?.salesConfig?.publicSaleEnd,
+    collectionData?.salesConfig?.publicSaleStart,
+    isEnded,
+  ])
+
   return (
     <DropsContractContext.Provider
       value={{
@@ -287,9 +303,10 @@ export function DropsContractProvider({
         purchaseLimit,
         inventory,
         balance,
-        mintTiming: {
+        mintStatus: {
           text: undefined,
-          isEnded: undefined,
+          isEnded: isEnded,
+          isActive: isActive,
           startDate: startDate,
           endDate: endDate,
         },

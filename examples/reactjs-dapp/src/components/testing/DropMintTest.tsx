@@ -30,7 +30,9 @@ function MintUI() {
       walletBalance,
       walletLimit
     },
-    mintTiming: {
+    mintStatus: {
+      isActive,
+      isEnded,
       startDate,
       endDate,
     },
@@ -56,8 +58,14 @@ function MintUI() {
           <p>Maximum per address: {prettyMaxAmount}</p>
           <p>Sold: {prettyInventory} NFTs</p>
           <p>Price: {totalPrice?.pretty}Ξ</p>
-          <p>Minting Starts: {startDate?.pretty}</p>
-          {!endDate?.pretty ? null : <p>Minting Ends: {JSON.stringify(endDate, null, 2)}</p>}
+          {!isEnded
+            ? <>
+                <p>Minting Starts: {startDate?.pretty}</p>
+                {!endDate?.pretty ? null : <p>Minting Ends: {JSON.stringify(endDate, null, 2)}</p>}
+              </>
+            : <p>Sale has ended</p>
+          }
+          {isActive && <p>Minting Active</p>}
           <p>You Own: {walletBalance} NFT{`${walletBalance > 1 || walletBalance === 0 ? 's' : ''}`}</p>
           <hr className="my-2"></hr>
         </div>
