@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^0.6.0",
+    "@tailwindcss/forms": "^0.5.3",
     "@zoralabs/nft-drop-contracts": "^1.0.1",
     "@zoralabs/nft-hooks": "^1.1.9",
     "@zoralabs/zdk": "^2.1.8",

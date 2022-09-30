@@ -14,6 +14,8 @@ export {
   useDropContextProvider,
   DropsContextProvider,
   useDropsContextProvider,
+  DropsContractProvider,
+  useDropsContractProvider,
 } from './context'
 
 export { addIPFSGateway } from './lib/addIPFSGateway'
