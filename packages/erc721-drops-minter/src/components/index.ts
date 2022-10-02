@@ -1,2 +1,2 @@
 export * from './DropsMinter'
-export * from './MintUi'
+export * from './drop-components'
