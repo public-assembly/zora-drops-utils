@@ -106,9 +106,9 @@ export function WalletBalance() {
   )
 }
 
-export function SalesInfo() {
+export function SalesInfo({ ...props }) {
   return (
-    <>
+    <div className={`drops-ui__sales-info--component`} {...props}>
       <CollectionAddress />
       <MaxQuantity />
       <Inventory />
@@ -117,6 +117,6 @@ export function SalesInfo() {
       <SaleActiveAlert />
       <SaleEndedAlert />
       <WalletBalance />
-    </>
+    </div>
   )
 }

@@ -43,12 +43,12 @@ export function MetadataDescription() {
   )
 }
 
-export function Metadata() {
+export function Metadata({ ...props }) {
   return (
-    <>
+    <div className={`drops-ui__metadata--component`} {...props}>
       <MetadataName />
       <MetadataCreator />
       <MetadataDescription />
-    </>
+    </div>
   )
 }

@@ -10,7 +10,7 @@ export function MintQuantity({ ...props }) {
   } = useDropsContractProvider()
 
   return (
-    <div className={`drops-ui__mint-quantity--wrapper`} {...props}>
+    <div className={`drops-ui__mint-quantity--component`} {...props}>
       <input
         type="number"
         name="mint-quantity"

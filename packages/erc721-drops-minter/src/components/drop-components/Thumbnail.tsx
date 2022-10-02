@@ -4,7 +4,7 @@ import {
   addIPFSGateway,
 } from '@public-assembly/zora-drops-utils'
 
-export function Thumbnail() {
+export function Thumbnail({ ...props }) {
   const { collectionData: data } = useDropsContractProvider()
 
   const src = React.useMemo(
@@ -17,7 +17,8 @@ export function Thumbnail() {
 
   return (
     <div
-      className={`drops-ui__thumbnail--wrapper relative aspect-square w-full overflow-hidden rounded-xl shadow-sm`}>
+      className={`drops-ui__thumbnail--component relative aspect-square w-full overflow-hidden rounded-xl shadow-sm`}
+      {...props}>
       <img
         className={`drops-ui__thumbnail--image absolute inset-0 object-cover`}
         src={src}

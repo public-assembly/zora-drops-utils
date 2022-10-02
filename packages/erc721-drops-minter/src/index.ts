@@ -36,4 +36,4 @@ export const DropsComponents = {
   TxStatus,
 }
 
-export { DropsMinter } from './components'
+export { DropsMinter } from './components/DropsMinter'
