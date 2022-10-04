@@ -18,6 +18,7 @@ const DEFAULT_MINT_QUANTITY = {
 export type DropsContractProps = {
   children?: React.ReactNode
   collectionAddress?: string
+  networkId?: '1' | '5'
   onSuccessCallback?: () => void
 }
 
@@ -26,6 +27,7 @@ export type DropsContractReturnTypes = {
   setMintQuantity?: React.ChangeEventHandler<HTMLInputElement>
   collectionData?: any
   collectionAddress?: string
+  networkId?: '1' | '5'
   transaction?: {
     purchaseData: any
     purchaseLoading: boolean
@@ -86,6 +88,7 @@ const DropsContractContext = React.createContext<DropsContractReturnTypes>({
   setMintQuantity: undefined,
   collectionData: undefined,
   collectionAddress: undefined,
+  networkId: '1',
   totalPrice: undefined,
   mintQuantity: DEFAULT_MINT_QUANTITY,
   errors: {
@@ -130,9 +133,13 @@ export function useDropsContractProvider() {
 export function DropsContractProvider({
   children,
   collectionAddress,
+  networkId = '1',
   onSuccessCallback = () => {},
 }: DropsContractProps) {
-  const { data: collectionData } = useSWRDrop({ contractAddress: collectionAddress })
+  const { data: collectionData } = useSWRDrop({
+    contractAddress: collectionAddress,
+    networkId: networkId,
+  })
 
   const [mintQuantity, setMintQuantity] = React.useState(DEFAULT_MINT_QUANTITY)
 
@@ -142,7 +149,6 @@ export function DropsContractProvider({
         name: event?.target?.value,
         queryValue: parseInt(event?.target?.value),
       })
-      console.log(mintQuantity.queryValue)
     },
     [mintQuantity, setMintQuantity]
   )
@@ -296,6 +302,7 @@ export function DropsContractProvider({
           pretty: prettyPurchasePrice,
         },
         collectionAddress: collectionAddress,
+        networkId: networkId,
         errors: {
           insufficientFunds: insufficientFunds,
           unpredictableGasLimit: unpredictableGasLimit,
