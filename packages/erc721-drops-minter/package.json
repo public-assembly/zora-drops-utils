@@ -1,0 +1,31 @@
+{
+  "name": "@public-assembly/erc721-drops-minter",
+  "version": "0.0.3",
+  "description": "Micro UI library to interact with erc721drops",
+  "main": "dist/public-assembly-erc721-drops-minter.cjs.js",
+  "module": "dist/public-assembly-erc721-drops-minter.esm.js",
+  "author": "Public Assembly",
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/public-assembly/zora-drops-utils.git",
+    "directory": "packages/erc721-drops-minter"
+  },
+  "files": [
+    "/dist"
+  ],
+  "peerDependencies": {
+    "@zoralabs/nft-drop-contracts": "^1.0.1",
+    "ethers": "^5.7.1",
+    "graphql": "^16.6.0",
+    "graphql-request": "^5.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "swr": "^1.3.0",
+    "wagmi": "^0.6.7"
+  },
+  "dependencies": {
+    "@public-assembly/zora-drops-utils": "^0.0.9"
+  }
+}
