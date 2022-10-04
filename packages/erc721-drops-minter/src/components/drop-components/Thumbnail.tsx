@@ -17,7 +17,7 @@ export function Thumbnail({ ...props }) {
 
   return (
     <div
-      className={`drops-ui__thumbnail--component relative aspect-square w-full overflow-hidden rounded-xl shadow-sm`}
+      className={`drops-ui__thumbnail--component relative aspect-square w-full overflow-hidden`}
       {...props}>
       <img
         className={`drops-ui__thumbnail--image absolute inset-0 object-cover`}

@@ -1,3 +1,5 @@
+/* @ts-ignore */
+import React from 'react'
 import { useDropsContractProvider } from '@public-assembly/zora-drops-utils'
 
 export function MintQuantity({ ...props }) {
