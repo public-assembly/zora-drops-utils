@@ -4,7 +4,7 @@ import {
   addIPFSGateway,
 } from '@public-assembly/zora-drops-utils'
 
-interface VideoRendererProps extends React.VideoHTMLAttributes<HTMLElement> {}
+export interface VideoRendererProps extends React.VideoHTMLAttributes<HTMLElement> {}
 
 export const VideoRenderer = React.forwardRef<HTMLVideoElement, VideoRendererProps>(
   (props, ref) => {

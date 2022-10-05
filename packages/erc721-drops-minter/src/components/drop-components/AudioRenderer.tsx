@@ -4,7 +4,7 @@ import {
   addIPFSGateway,
 } from '@public-assembly/zora-drops-utils'
 
-interface AudioRendererProps extends React.AudioHTMLAttributes<HTMLElement> {}
+export interface AudioRendererProps extends React.AudioHTMLAttributes<HTMLElement> {}
 
 export const AudioRenderer = React.forwardRef<HTMLAudioElement, AudioRendererProps>(
   (props, ref) => {
