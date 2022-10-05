@@ -14,6 +14,8 @@ import {
   SaleActiveAlert,
   SaleEndedAlert,
   Thumbnail,
+  VideoRenderer,
+  AudioRenderer,
   TxStatus,
 } from './components/drop-components'
 
@@ -33,6 +35,8 @@ export const DropsComponents = {
   SaleActiveAlert,
   SaleEndedAlert,
   Thumbnail,
+  VideoRenderer,
+  AudioRenderer,
   TxStatus,
 }
 
