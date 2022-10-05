@@ -18,7 +18,11 @@ root.render(
       <SimpleMint />
       <h1>Map over Full DropsMinter component</h1>
       {TEST_MINT_CONTRACTS.map((edition: any) =>
-        <DropsMinter key={edition} collectionAddress={edition} />
+        <DropsMinter
+          key={edition}
+          collectionAddress={edition}
+          networkId='1'
+        />
       )}
     </>
   </App>

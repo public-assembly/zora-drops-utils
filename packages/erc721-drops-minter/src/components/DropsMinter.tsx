@@ -12,9 +12,11 @@ import {
 
 export function DropsMinter({
   collectionAddress,
+  networkId = '1',
   successCallback,
 }: {
   collectionAddress?: string
+  networkId?: '1' | '5'
   successCallback?: () => void
 }) {
   const onSuccess = React.useCallback(() => {
@@ -28,6 +30,7 @@ export function DropsMinter({
   return (
     <DropsContractProvider
       collectionAddress={collectionAddress}
+      networkId={networkId}
       onSuccessCallback={onSuccess}>
       <div
         className={`drops-ui__minter--wrapper border-1 grid grid-cols-3 gap-4 rounded-xl border border-solid p-4`}>

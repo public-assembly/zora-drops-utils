@@ -20,11 +20,7 @@ export function MintButton({ ...props }) {
         onClick={purchase}
         className={`
           drops-ui__mint-button--button border-1 w-full border px-2 py-3
-          ${
-            cannotMint
-              ? 'drops-ui__mint-button--disabled pointer-events-none opacity-30'
-              : ''
-          }
+          ${cannotMint ? 'drops-ui__mint-button--disabled pointer-events-none' : ''}
           `}>
         {!cannotMint ? (
           <span className="drops-ui__mint-button--label">
