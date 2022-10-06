@@ -5,10 +5,10 @@ import { shortenAddress } from '../../lib'
 import { MetaDataProps } from '../../types'
 
 /* TODO: ClassProp & "title" string const */
-export function MetadataName({ label = 'Name:' }: MetaDataProps) {
+export function MetadataName({ label = 'Name:', ...props }: MetaDataProps) {
   const { collectionData } = useDropsContractProvider()
   return (
-    <p className={`drops-ui__metadata--name`}>
+    <p className={`drops-ui__metadata--name`} {...props}>
       {label ? <span className="drops-ui__metadata--label">{label}&nbsp;</span> : null}
       <span className="drops-ui__metadata--copy">{collectionData?.name}</span>
     </p>
@@ -16,7 +16,7 @@ export function MetadataName({ label = 'Name:' }: MetaDataProps) {
 }
 
 /* TODO: ClassProp & "title" string const */
-export function MetadataCreator({ label = 'Creator:' }: MetaDataProps) {
+export function MetadataCreator({ label = 'Creator:', ...props }: MetaDataProps) {
   const { collectionData } = useDropsContractProvider()
   const { data: ensName } = useEnsName({
     address: collectionData?.creator,
@@ -26,7 +26,7 @@ export function MetadataCreator({ label = 'Creator:' }: MetaDataProps) {
     [collectionData]
   )
   return (
-    <p className={`drops-ui__metadata--creator`}>
+    <p className={`drops-ui__metadata--creator`} {...props}>
       {label ? <span className="drops-ui__metadata--label">{label}&nbsp;</span> : null}
       <span className="drops-ui__metadata--copy">
         {ensName ? ensName : shortenAddress(creator)}
@@ -35,10 +35,10 @@ export function MetadataCreator({ label = 'Creator:' }: MetaDataProps) {
   )
 }
 
-export function MetadataDescription({ label = 'Creator:' }: MetaDataProps) {
+export function MetadataDescription({ label = 'Creator:', ...props }: MetaDataProps) {
   const { collectionData } = useDropsContractProvider()
   return (
-    <p className={`drops-ui__metadata--description`}>
+    <p className={`drops-ui__metadata--description`} {...props}>
       {label ? <span className="drops-ui__metadata--label">{label}&nbsp;</span> : null}
       <span className="drops-ui__metadata--copy">
         {collectionData?.editionMetadata?.description}
