@@ -2,14 +2,19 @@
 import React from 'react'
 import { useDropsContractProvider } from '@public-assembly/zora-drops-utils'
 import { MetaDataProps } from '../../types'
+import { shortenAddress } from '../../lib'
 
-/* TODO: add etherscan link */
-export function CollectionAddress({ label = 'Collection address:' }: MetaDataProps) {
+export function CollectionAddress({
+  label = 'Collection address:',
+  truncateAddress = false,
+}: MetaDataProps & { truncateAddress?: boolean }) {
   const { collectionAddress } = useDropsContractProvider()
   return (
     <p className={`drops-ui__sales-info--collection-address`}>
       {label ? <span className="drops-ui__sales-info--label">{label}&nbsp;</span> : null}
-      <span className="drops-ui__sales-info--copy">{collectionAddress}</span>
+      <span className="drops-ui__sales-info--copy">
+        {truncateAddress ? shortenAddress(collectionAddress) : collectionAddress}
+      </span>
     </p>
   )
 }

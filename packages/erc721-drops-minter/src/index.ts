@@ -17,6 +17,7 @@ import {
   VideoRenderer,
   AudioRenderer,
   TxStatus,
+  EtherscanLink,
 } from './components/drop-components'
 
 export const DropsComponents = {
@@ -38,6 +39,7 @@ export const DropsComponents = {
   VideoRenderer,
   AudioRenderer,
   TxStatus,
+  EtherscanLink,
 }
 
 export { DropsMinter } from './components/DropsMinter'
