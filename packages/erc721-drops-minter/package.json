@@ -26,6 +26,6 @@
     "wagmi": "^0.6.7"
   },
   "dependencies": {
-    "@public-assembly/zora-drops-utils": "^0.1.0"
+    "@public-assembly/zora-drops-utils": "^0.1.1"
   }
 }
