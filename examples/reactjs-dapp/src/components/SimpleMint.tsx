@@ -12,10 +12,11 @@ export function SimpleMintUi() {
 
 export function SimpleMint() {
   return (
-    <DropsContractProvider collectionAddress='0xf11915f3dc44519a7217f6b1e0978f29f8a0ed4b'>
+    <DropsContractProvider collectionAddress='0x915569b4009b75a2228192902dfcd4e897d9bda3'>
       <DropsComponents.EtherscanLink label={false} linkType='address' truncateAddress/>
       <SimpleMintUi />
       <DropsComponents.Metadata />
+      <DropsComponents.Inventory />
       <DropsComponents.VideoRenderer muted autoPlay style={{aspectRatio: '16/9', width: 500}} />
     </DropsContractProvider>
   )

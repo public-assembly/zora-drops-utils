@@ -7,7 +7,7 @@ const domContainer = document.getElementById('main')
 const root = ReactDOM.createRoot(domContainer)
 
 const TEST_MINT_CONTRACTS = [
-  '0xb7a791c3b5a0aa833e638250f982ebd29194f02c',
+  '0x915569b4009b75a2228192902dfcd4e897d9bda3',
   '0x47191cb94c0b6925db9f15e000cf8e3e8864fc9b',
 ]
 

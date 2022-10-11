@@ -210,7 +210,11 @@ export function DropsContractProvider({
     return {
       totalSupply: collectionData?.maxSupply,
       totalSold: collectionData?.totalMinted,
-      prettyInventory: `${collectionData?.totalMinted} / ${collectionData?.maxSupply}`,
+      prettyInventory: `${collectionData?.totalMinted} / ${
+        collectionData?.maxSupply === '18446744073709551615'
+          ? '∞'
+          : collectionData?.maxSupply
+      }`,
     }
   }, [collectionData, mintQuantity])
 
