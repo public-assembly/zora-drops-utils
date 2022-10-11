@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom/client'
 import { App } from './App'
 import { DropsMinter } from '@public-assembly/erc721-drops-minter'
 import { SimpleMint } from './components/SimpleMint'
+import { CurationTest } from './components/CurationTest'
 
 const domContainer = document.getElementById('main')
 const root = ReactDOM.createRoot(domContainer)
@@ -14,6 +15,8 @@ const TEST_MINT_CONTRACTS = [
 root.render(
   <App>
     <>
+      
+      <CurationTest />
       <h1>Just Image and mintbutton using decoupled components</h1>
       <SimpleMint />
       <h1>Map over Full DropsMinter component</h1>
