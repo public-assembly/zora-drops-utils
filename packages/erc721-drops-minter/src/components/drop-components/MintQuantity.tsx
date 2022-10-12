@@ -11,6 +11,14 @@ export function MintQuantity({ ...props }) {
     setMintQuantity,
   } = useDropsContractProvider()
 
+  const setMaxAmount = React.useMemo(() => {
+    if (typeof maxAmount === 'number') {
+      return maxAmount - Number(walletBalance)
+    } else {
+      return Number.MAX_SAFE_INTEGER
+    }
+  }, [maxAmount, walletBalance])
+
   return (
     <div className={`drops-ui__mint-quantity--component`} {...props}>
       <input
@@ -18,7 +26,7 @@ export function MintQuantity({ ...props }) {
         name="mint-quantity"
         step="1"
         min="1"
-        max={maxAmount - Number(walletBalance)}
+        max={setMaxAmount}
         value={mintQuantity?.name}
         onChange={setMintQuantity}
         className={`

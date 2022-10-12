@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import { EDITION_QUERY, dropsFetcher } from '../data'
-import { DropsRequestProps } from '../typings'
+import { DropsRequestProps, DropsQueryReturn } from '../typings/requestTypes'
 import { useValidAddress } from './useValidAddress'
 
 export function useSWRDrop({
@@ -28,5 +28,11 @@ export function useSWRDrop({
     isLoading: !error && !data,
     isValidating,
     isValidAddress,
+  } as {
+    data: DropsQueryReturn
+    error: any
+    isLoading: boolean
+    isValidating: boolean
+    isValidAddress: boolean
   }
 }

@@ -15,7 +15,6 @@ const TEST_MINT_CONTRACTS = [
 root.render(
   <App>
     <>
-      
       <CurationTest />
       <h1>Just Image and mintbutton using decoupled components</h1>
       <SimpleMint />

@@ -9,6 +9,8 @@ import zoraDropsABI from '@zoralabs/nft-drop-contracts/dist/artifacts/ERC721Drop
 import { ethers } from 'ethers'
 import { useSWRDrop } from '../hooks'
 import { dateFormat } from '../constants'
+import { addIPFSGateway } from '../lib'
+import { DropsQueryReturn } from '../typings/requestTypes'
 
 const DEFAULT_MINT_QUANTITY = {
   name: '1',
@@ -20,12 +22,14 @@ export type DropsContractProps = {
   collectionAddress?: string
   networkId?: '1' | '5'
   onSuccessCallback?: () => void
+  customIpfsGateway?: string
 }
 
 export type DropsContractReturnTypes = {
   purchase?: () => void
   setMintQuantity?: React.ChangeEventHandler<HTMLInputElement>
-  collectionData?: any
+  collectionData?: DropsQueryReturn
+  parsedData?: DropsQueryReturn
   collectionAddress?: string
   networkId?: '1' | '5'
   transaction?: {
@@ -47,13 +51,13 @@ export type DropsContractReturnTypes = {
     insufficientFunds: boolean
   }
   purchaseLimit?: {
-    maxAmount?: number
+    maxAmount?: number | string
     pastAmount?: boolean
     prettyMaxAmount?: number | string
   }
   inventory?: {
-    totalSupply?: number
-    totalSold?: number
+    totalSupply?: number | string
+    totalSold?: number | string
     prettyInventory?: string
   }
   balance?: {
@@ -87,6 +91,7 @@ const DropsContractContext = React.createContext<DropsContractReturnTypes>({
   },
   setMintQuantity: undefined,
   collectionData: undefined,
+  parsedData: undefined,
   collectionAddress: undefined,
   networkId: '1',
   totalPrice: undefined,
@@ -134,12 +139,36 @@ export function DropsContractProvider({
   children,
   collectionAddress,
   networkId = '1',
+  customIpfsGateway,
   onSuccessCallback = () => {},
 }: DropsContractProps) {
   const { data: collectionData } = useSWRDrop({
     contractAddress: collectionAddress,
     networkId: networkId,
   })
+
+  const parsedData = React.useMemo(() => {
+    if (collectionData) {
+      try {
+        return {
+          ...collectionData,
+          editionMetadata: {
+            ...collectionData?.editionMetadata,
+            imageURI: addIPFSGateway(
+              collectionData?.editionMetadata?.imageURI,
+              customIpfsGateway
+            ),
+            animationURI: addIPFSGateway(
+              collectionData?.editionMetadata?.animationURI,
+              customIpfsGateway
+            ),
+          },
+        } as DropsQueryReturn
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  }, [collectionData])
 
   const [mintQuantity, setMintQuantity] = React.useState(DEFAULT_MINT_QUANTITY)
 
@@ -221,7 +250,7 @@ export function DropsContractProvider({
   const balance = React.useMemo(() => {
     try {
       return {
-        walletLimit: balanceOf >= purchaseLimit?.maxAmount,
+        walletLimit: Number(balanceOf.toString()) >= Number(purchaseLimit?.maxAmount),
         walletBalance: balanceOf && balanceOf.toString(),
       }
     } catch (err) {
@@ -292,6 +321,7 @@ export function DropsContractProvider({
     <DropsContractContext.Provider
       value={{
         collectionData,
+        parsedData,
         purchase,
         transaction: {
           purchaseData,

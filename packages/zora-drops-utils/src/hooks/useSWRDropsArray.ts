@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import { dropsArrayFetcher } from '../data'
-import { DropsArrayRequestProps } from '../typings/requestTypes'
+import { DropsArrayRequestProps, DropsQueryReturn } from '../typings/requestTypes'
 
 export function useSWRDropsArray({
   contractAddresses,
@@ -9,7 +9,6 @@ export function useSWRDropsArray({
 }: {
   refreshInterval?: number
 } & DropsArrayRequestProps) {
-  /* Todo: add invalid address in list check? */
   const { data, error, isValidating } = useSWR(
     [{ contractAddresses, networkId }],
     dropsArrayFetcher,
@@ -24,5 +23,10 @@ export function useSWRDropsArray({
     error,
     isLoading: !error && !data,
     isValidating,
+  } as {
+    data: DropsQueryReturn[] | undefined
+    error: any
+    isLoading: boolean
+    isValidating: boolean
   }
 }
