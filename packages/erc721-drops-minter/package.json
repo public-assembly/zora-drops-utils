@@ -1,6 +1,6 @@
 {
   "name": "@public-assembly/erc721-drops-minter",
-  "version": "0.0.8",
+  "version": "0.0.91",
   "description": "Micro UI library to interact with erc721drops",
   "main": "dist/public-assembly-erc721-drops-minter.cjs.js",
   "module": "dist/public-assembly-erc721-drops-minter.esm.js",
