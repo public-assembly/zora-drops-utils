@@ -8,7 +8,7 @@ export interface AudioRendererProps extends React.AudioHTMLAttributes<HTMLElemen
 
 export const AudioRenderer = React.forwardRef<HTMLAudioElement, AudioRendererProps>(
   (props, ref) => {
-    const { collectionData: data } = useDropsContractProvider()
+    const { parsedData: data } = useDropsContractProvider()
     const src = React.useMemo(
       () =>
         data?.editionMetadata?.animationURI

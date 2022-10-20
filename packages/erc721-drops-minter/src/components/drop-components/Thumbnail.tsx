@@ -1,12 +1,13 @@
-import React from 'react'
+// import React from 'react'
 import {
   useDropsContractProvider,
-  addIPFSGateway,
+  // addIPFSGateway,
 } from '@public-assembly/zora-drops-utils'
 
 export function Thumbnail({ ...props }) {
-  const { collectionData: data } = useDropsContractProvider()
+  const { parsedData: data } = useDropsContractProvider()
 
+  /*
   const src = React.useMemo(
     () =>
       data?.editionMetadata?.imageURI
@@ -14,6 +15,7 @@ export function Thumbnail({ ...props }) {
         : '',
     [data, data?.editionMetadata?.imageURI]
   )
+  */
 
   return (
     <div
@@ -21,7 +23,7 @@ export function Thumbnail({ ...props }) {
       {...props}>
       <img
         className={`drops-ui__thumbnail--image absolute inset-0 object-cover`}
-        src={src}
+        src={data?.editionMetadata?.imageURI}
       />
     </div>
   )

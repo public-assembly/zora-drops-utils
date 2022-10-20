@@ -320,8 +320,8 @@ export function DropsContractProvider({
   return (
     <DropsContractContext.Provider
       value={{
-        collectionData,
-        parsedData,
+        collectionData: collectionData,
+        parsedData: parsedData,
         purchase,
         transaction: {
           purchaseData,

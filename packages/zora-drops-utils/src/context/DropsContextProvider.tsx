@@ -76,8 +76,8 @@ export function DropsContextProvider({
     <DropsContext.Provider
       value={{
         contractAddresses,
-        data,
-        parsedData,
+        data: data,
+        parsedData: parsedData,
         error,
         isLoading,
       }}>

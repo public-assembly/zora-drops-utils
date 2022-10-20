@@ -6,24 +6,24 @@ import { MetaDataProps } from '../../types'
 
 /* TODO: ClassProp & "title" string const */
 export function MetadataName({ label = 'Name:', ...props }: MetaDataProps) {
-  const { collectionData } = useDropsContractProvider()
+  const { parsedData } = useDropsContractProvider()
   return (
     <p className={`drops-ui__metadata--name`} {...props}>
       {label ? <span className="drops-ui__metadata--label">{label}&nbsp;</span> : null}
-      <span className="drops-ui__metadata--copy">{collectionData?.name}</span>
+      <span className="drops-ui__metadata--copy">{parsedData?.name}</span>
     </p>
   )
 }
 
 /* TODO: ClassProp & "title" string const */
 export function MetadataCreator({ label = 'Creator:', ...props }: MetaDataProps) {
-  const { collectionData } = useDropsContractProvider()
+  const { parsedData } = useDropsContractProvider()
   const { data: ensName } = useEnsName({
-    address: collectionData?.creator,
+    address: parsedData?.creator,
   })
   const creator = React.useMemo(
-    () => collectionData?.creator && collectionData?.creator,
-    [collectionData]
+    () => parsedData?.creator && parsedData?.creator,
+    [parsedData]
   )
   return (
     <p className={`drops-ui__metadata--creator`} {...props}>
@@ -35,13 +35,14 @@ export function MetadataCreator({ label = 'Creator:', ...props }: MetaDataProps)
   )
 }
 
-export function MetadataDescription({ label = 'Creator:', ...props }: MetaDataProps) {
-  const { collectionData } = useDropsContractProvider()
+export function MetadataDescription({ label = 'Description:', ...props }: MetaDataProps) {
+  const { parsedData, collectionData } = useDropsContractProvider()
+  console.log('parsedData', parsedData, collectionData)
   return (
     <p className={`drops-ui__metadata--description`} {...props}>
       {label ? <span className="drops-ui__metadata--label">{label}&nbsp;</span> : null}
       <span className="drops-ui__metadata--copy">
-        {collectionData?.editionMetadata?.description}
+        {parsedData?.editionMetadata?.description}
       </span>
     </p>
   )

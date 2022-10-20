@@ -12,7 +12,7 @@ export function SimpleMintUi() {
 
 export function SimpleMint() {
   return (
-    <DropsContractProvider collectionAddress='0x915569b4009b75a2228192902dfcd4e897d9bda3'>
+    <DropsContractProvider collectionAddress='0x915569b4009b75a2228192902dfcd4e897d9bda3' customIpfsGateway='zora-prod.mypinata.cloud'>
       <DropsComponents.EtherscanLink label={false} linkType='address' truncateAddress/>
       <SimpleMintUi />
       <DropsComponents.Metadata />
