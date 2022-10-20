@@ -6,6 +6,15 @@ export function MintQuantity({ ...props }) {
   const { mintQuantity, errors, purchaseLimit, balance, setMintQuantity } =
     useDropsContractProvider()
 
+  const inputMax = React.useMemo(() => {
+    try {
+      return Number(purchaseLimit?.maxAmount) - Number(balance?.walletBalance)
+    } catch (err) {
+      console.error(err)
+      return 1
+    }
+  }, [purchaseLimit, balance])
+
   return (
     <div className={`drops-ui__mint-quantity--component`} {...props}>
       <input
@@ -13,11 +22,7 @@ export function MintQuantity({ ...props }) {
         name="mint-quantity"
         step="1"
         min="1"
-        max={
-          typeof purchaseLimit?.maxAmount === 'number'
-            ? purchaseLimit?.maxAmount - Number(balance?.walletBalance)
-            : 1
-        }
+        max={inputMax}
         value={mintQuantity?.name}
         onChange={setMintQuantity}
         className={`
