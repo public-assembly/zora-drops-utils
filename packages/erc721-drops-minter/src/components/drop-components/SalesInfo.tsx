@@ -20,25 +20,21 @@ export function CollectionAddress({
 }
 
 export function MaxQuantity({ label = 'Maximum per address:' }: MetaDataProps) {
-  const {
-    purchaseLimit: { prettyMaxAmount },
-  } = useDropsContractProvider()
+  const { purchaseLimit } = useDropsContractProvider()
   return (
     <p className={`drops-ui__sales-info--max-quantity`}>
       {label ? <span className="drops-ui__sales-info--label">{label}&nbsp;</span> : null}
-      <span className="drops-ui__sales-info--copy">{prettyMaxAmount}</span>
+      <span className="drops-ui__sales-info--copy">{purchaseLimit?.prettyMaxAmount}</span>
     </p>
   )
 }
 
 export function Inventory({ label = 'NFTs sold:' }: MetaDataProps) {
-  const {
-    inventory: { prettyInventory },
-  } = useDropsContractProvider()
+  const { inventory } = useDropsContractProvider()
   return (
     <p className={`drops-ui__sales-info--inventory`}>
       {label ? <span className="drops-ui__sales-info--label">{label}&nbsp;</span> : null}
-      <span className="drops-ui__sales-info--copy">{prettyInventory}</span>
+      <span className="drops-ui__sales-info--copy">{inventory?.prettyInventory}</span>
     </p>
   )
 }
@@ -68,19 +64,17 @@ export function SalesTiming({
   mintStartLabel?: string
   mintEndLabel?: string
 }) {
-  const {
-    mintStatus: { isEnded, startDate, endDate },
-  } = useDropsContractProvider()
-  if (isEnded) return null
+  const { mintStatus } = useDropsContractProvider()
+  if (mintStatus?.isEnded) return null
   return (
     <p className={`drops-ui__sales-info--sales-timing`}>
       <span className="drops-ui__sales-info--title">{mintStartLabel}&nbsp;</span>
-      <span className="drops-ui__sales-info--copy">{startDate?.pretty}</span>
-      {!endDate?.pretty ? null : (
+      <span className="drops-ui__sales-info--copy">{mintStatus?.startDate?.pretty}</span>
+      {!mintStatus?.endDate?.pretty ? null : (
         <>
           <span className="drops-ui__sales-info--title">{mintEndLabel}&nbsp;</span>
           <span className="drops-ui__sales-info--copy">
-            {JSON.stringify(endDate, null, 2)}
+            {JSON.stringify(mintStatus?.endDate, null, 2)}
           </span>
         </>
       )}
@@ -89,10 +83,8 @@ export function SalesTiming({
 }
 
 export function SaleActiveAlert() {
-  const {
-    mintStatus: { isActive },
-  } = useDropsContractProvider()
-  if (!isActive) return null
+  const { mintStatus } = useDropsContractProvider()
+  if (!mintStatus?.isActive) return null
   return (
     <p className={`drops-ui__sales-info--sale-active-alert`}>
       <span className="drops-ui__sales-info--alert">Minting Active</span>
@@ -101,10 +93,8 @@ export function SaleActiveAlert() {
 }
 
 export function SaleEndedAlert() {
-  const {
-    mintStatus: { isEnded },
-  } = useDropsContractProvider()
-  if (!isEnded) return null
+  const { mintStatus } = useDropsContractProvider()
+  if (!mintStatus?.isEnded) return null
   return (
     <p className={`drops-ui__sales-info--sale-ended-alert`}>
       <span className="drops-ui__sales-info--alert">Sale has ended</span>
@@ -113,14 +103,13 @@ export function SaleEndedAlert() {
 }
 
 export function WalletBalance() {
-  const {
-    balance: { walletBalance },
-  } = useDropsContractProvider()
+  const { balance } = useDropsContractProvider()
   return (
     <p className={`drops-ui__sales-info--balance`}>
       <span className="drops-ui__sales-info--title">You Own:&nbsp;</span>
       <span className="drops-ui__sales-info--copy">
-        {walletBalance}&nbsp;NFT{`${walletBalance > 1 || walletBalance === 0 ? 's' : ''}`}
+        {balance?.walletBalance}&nbsp;NFT
+        {`${balance?.walletBalance > 1 || balance?.walletBalance === 0 ? 's' : ''}`}
       </span>
     </p>
   )

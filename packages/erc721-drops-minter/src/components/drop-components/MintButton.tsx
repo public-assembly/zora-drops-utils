@@ -2,16 +2,11 @@ import React from 'react'
 import { useDropsContractProvider } from '@public-assembly/zora-drops-utils'
 
 export function MintButton({ ...props }) {
-  const {
-    mintQuantity,
-    errors: { insufficientFunds },
-    balance: { walletBalance, walletLimit },
-    purchase,
-  } = useDropsContractProvider()
+  const { mintQuantity, errors, balance, purchase } = useDropsContractProvider()
 
   const cannotMint = React.useMemo(
-    () => insufficientFunds || walletLimit,
-    [insufficientFunds, walletLimit]
+    () => errors?.insufficientFunds || balance?.walletLimit,
+    [errors, balance, errors?.insufficientFunds, balance?.walletLimit]
   )
 
   return (
@@ -25,12 +20,12 @@ export function MintButton({ ...props }) {
         {!cannotMint ? (
           <span className="drops-ui__mint-button--label">
             Purchase {mintQuantity?.name} NFT
-            {`${mintQuantity?.queryValue > 1 || walletBalance === 0 ? 's' : ''}`}
+            {`${mintQuantity?.queryValue > 1 || balance?.walletBalance === 0 ? 's' : ''}`}
           </span>
         ) : (
           <span className="drops-ui__mint-button--label drops-ui__mint-button--label-alert">
-            {insufficientFunds ? 'Insufficient Funds' : ''}
-            {walletLimit ? 'You have minted the maximum amount per wallet.' : ''}
+            {errors?.insufficientFunds ? 'Insufficient Funds' : ''}
+            {balance?.walletLimit ? 'You have minted the maximum amount per wallet.' : ''}
           </span>
         )}
       </button>
