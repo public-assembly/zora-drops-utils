@@ -5,14 +5,15 @@ export function SimpleMintUi() {
   return (
     <div style={{width: 400}}>
       <DropsComponents.Thumbnail />
-      <DropsComponents.MintButton />
+      <DropsComponents.MintButton mintCta='MINT THIS SHIT' />
+      <DropsComponents.TotalPrice />
     </div>
   )
 }
 
 export function SimpleMint() {
   return (
-    <DropsContractProvider collectionAddress='0x915569b4009b75a2228192902dfcd4e897d9bda3'>
+    <DropsContractProvider collectionAddress='0xb6fa203230ab041dc7433c315871cf551f776070'>
       <DropsComponents.EtherscanLink label={false} linkType='address' truncateAddress/>
       <SimpleMintUi />
       <DropsComponents.Metadata />

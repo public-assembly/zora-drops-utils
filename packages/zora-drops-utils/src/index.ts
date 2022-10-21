@@ -20,4 +20,54 @@ export {
 
 export { addIPFSGateway } from './lib/addIPFSGateway'
 
-export type { DropsRequestProps, DropsArrayRequestProps } from './typings/requestTypes'
+export type { DropsRequestProps, DropsArrayRequestProps, MetaDataProps } from './typings'
+
+/**
+ * Components
+ */
+
+import {
+  Metadata,
+  MetadataCreator,
+  MetadataName,
+  MetadataDescription,
+  MintButton,
+  MintQuantity,
+  SalesInfo,
+  CollectionAddress,
+  MaxQuantity,
+  Inventory,
+  TotalPrice,
+  SalesTiming,
+  SaleActiveAlert,
+  SaleEndedAlert,
+  Thumbnail,
+  VideoRenderer,
+  AudioRenderer,
+  TxStatus,
+  EtherscanLink,
+} from './components/drop-components'
+
+export const DropsComponents = {
+  Metadata,
+  MetadataCreator,
+  MetadataName,
+  MetadataDescription,
+  MintButton,
+  MintQuantity,
+  SalesInfo,
+  CollectionAddress,
+  MaxQuantity,
+  Inventory,
+  TotalPrice,
+  SalesTiming,
+  SaleActiveAlert,
+  SaleEndedAlert,
+  Thumbnail,
+  TxStatus,
+  EtherscanLink,
+  VideoRenderer,
+  AudioRenderer,
+}
+
+export { DropsMinter } from './components/DropsMinter'

@@ -1,1 +1,2 @@
-export type { DropsRequestProps } from './requestTypes'
+export type { DropsRequestProps, DropsArrayRequestProps } from './requestTypes'
+export type { MetaDataProps } from './displayTypes'
