@@ -6,10 +6,14 @@ export const EDITIONS_STYLE_CONTRACT_METADATA = gql`
     owner
     symbol
     salesConfig {
+      id
       publicSalePrice
+      maxSalePurchasePerAddress
       publicSaleStart
       publicSaleEnd
-      maxSalePurchasePerAddress
+      presaleStart
+      presaleEnd
+      presaleMerkleRoot
     }
     address
     maxSupply
