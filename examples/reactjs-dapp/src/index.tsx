@@ -1,13 +1,13 @@
 import ReactDOM from 'react-dom/client'
 import { App } from './App'
-import { DropsMinter } from '@public-assembly/erc721-drops-minter'
+import { DropsMinter } from '@public-assembly/zora-drops-utils'
 import { SimpleMint } from './components/SimpleMint'
 
 const domContainer = document.getElementById('main')
 const root = ReactDOM.createRoot(domContainer)
 
 const TEST_MINT_CONTRACTS = [
-  '0x915569b4009b75a2228192902dfcd4e897d9bda3',
+  '0xb6fa203230ab041dc7433c315871cf551f776070',
   '0x47191cb94c0b6925db9f15e000cf8e3e8864fc9b',
 ]
 
