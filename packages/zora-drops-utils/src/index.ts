@@ -20,7 +20,14 @@ export {
 
 export { addIPFSGateway } from './lib/addIPFSGateway'
 
-export type { DropsRequestProps, DropsArrayRequestProps, MetaDataProps } from './typings'
+export type {
+  DropsRequestProps,
+  DropsArrayRequestProps,
+  MetaDataProps,
+  DropsContractReturnTypes,
+  SaleDate,
+  DropsContractProps,
+} from './typings'
 
 /**
  * Components

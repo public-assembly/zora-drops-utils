@@ -9,72 +9,11 @@ import zoraDropsABI from '@zoralabs/nft-drop-contracts/dist/artifacts/ERC721Drop
 import { ethers } from 'ethers'
 import { useSWRDrop } from '../hooks'
 import { dateFormat } from '../constants'
+import { DropsContractReturnTypes, DropsContractProps } from './../typings'
 
 const DEFAULT_MINT_QUANTITY = {
   name: '1',
   queryValue: 1,
-}
-
-export type DropsContractProps = {
-  children?: React.ReactNode
-  collectionAddress?: string
-  networkId?: '1' | '5'
-  onSuccessCallback?: () => void
-}
-
-export type DropsContractReturnTypes = {
-  purchase?: () => void
-  setMintQuantity?: React.ChangeEventHandler<HTMLInputElement>
-  collectionData?: any
-  collectionAddress?: string
-  networkId?: '1' | '5'
-  transaction?: {
-    purchaseData: any
-    purchaseLoading: boolean
-    purchaseSuccess: boolean
-    txHash?: string
-  }
-  totalPrice?: {
-    raw: string | number
-    pretty: string | number
-  }
-  mintQuantity?: {
-    name: string
-    queryValue: number
-  }
-  errors: {
-    unpredictableGasLimit: boolean
-    insufficientFunds: boolean
-  }
-  purchaseLimit?: {
-    maxAmount?: number
-    pastAmount?: boolean
-    prettyMaxAmount?: number | string
-  }
-  inventory?: {
-    totalSupply?: number
-    totalSold?: number
-    prettyInventory?: string
-  }
-  balance?: {
-    walletLimit: boolean
-    walletBalance: number | string
-  }
-  mintStatus?: {
-    text?: string
-    isEnded?: boolean
-    isActive?: boolean
-    startDate?: {
-      iso?: Date | string
-      unixtime?: number | string
-      pretty?: string
-    }
-    endDate?: {
-      iso?: Date | string
-      unixtime?: number | string
-      pretty?: string
-    }
-  }
 }
 
 const DropsContractContext = React.createContext<DropsContractReturnTypes>({
@@ -122,6 +61,19 @@ const DropsContractContext = React.createContext<DropsContractReturnTypes>({
       iso: undefined,
       unixtime: undefined,
       pretty: undefined,
+    },
+    preSale: {
+      presaleStart: {
+        iso: undefined,
+        unixtime: undefined,
+        pretty: undefined,
+      },
+      presaleEnd: {
+        iso: undefined,
+        unixtime: undefined,
+        pretty: undefined,
+      },
+      presaleMerkleRoot: undefined,
     },
   },
 })
@@ -290,38 +242,40 @@ export function DropsContractProvider({
 
   return (
     <DropsContractContext.Provider
-      value={{
-        collectionData,
-        purchase,
-        transaction: {
-          purchaseData,
-          purchaseLoading,
-          purchaseSuccess,
-          txHash: purchaseData && purchaseData?.hash,
-        },
-        mintQuantity,
-        setMintQuantity: handleUpdateMintQuantity,
-        totalPrice: {
-          raw: totalPurchasePrice,
-          pretty: prettyPurchasePrice,
-        },
-        collectionAddress: collectionAddress,
-        networkId: networkId,
-        errors: {
-          insufficientFunds: insufficientFunds,
-          unpredictableGasLimit: unpredictableGasLimit,
-        },
-        purchaseLimit,
-        inventory,
-        balance,
-        mintStatus: {
-          text: undefined,
-          isEnded: isEnded,
-          isActive: isActive,
-          startDate: startDate,
-          endDate: endDate,
-        },
-      }}>
+      value={
+        {
+          collectionData,
+          purchase,
+          transaction: {
+            purchaseData,
+            purchaseLoading,
+            purchaseSuccess,
+            txHash: purchaseData && purchaseData?.hash,
+          },
+          mintQuantity,
+          setMintQuantity: handleUpdateMintQuantity,
+          totalPrice: {
+            raw: totalPurchasePrice,
+            pretty: prettyPurchasePrice,
+          },
+          collectionAddress: collectionAddress,
+          networkId: networkId,
+          errors: {
+            insufficientFunds: insufficientFunds,
+            unpredictableGasLimit: unpredictableGasLimit,
+          },
+          purchaseLimit,
+          inventory,
+          balance,
+          mintStatus: {
+            text: undefined,
+            isEnded: isEnded,
+            isActive: isActive,
+            startDate: startDate,
+            endDate: endDate,
+          },
+        } as DropsContractReturnTypes
+      }>
       {children}
     </DropsContractContext.Provider>
   )
