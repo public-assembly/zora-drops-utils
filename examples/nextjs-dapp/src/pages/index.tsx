@@ -1,5 +1,4 @@
-import { DropsMinter } from '@public-assembly/erc721-drops-minter'
-import { SimpleMint } from '../components/SimpleMint'
+import { DropsMinter } from '@public-assembly/zora-drops-utils'
 
 const TEST_MINT_CONTRACTS = [
   '0xE3d8572a5B1e47cD87A6222A5F989332E88DeA69',
@@ -10,7 +9,6 @@ function Page() {
   return (
     <section className="flex flex-col gap-4">
       <h1>Nextjs App</h1>
-      <SimpleMint />
       {TEST_MINT_CONTRACTS.map((edition: any) =>
         <DropsMinter key={edition} collectionAddress={edition} />
       )}
