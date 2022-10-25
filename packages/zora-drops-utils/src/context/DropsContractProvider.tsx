@@ -20,10 +20,12 @@ export type DropsContractProps = {
   collectionAddress?: string
   networkId?: '1' | '5'
   onSuccessCallback?: () => void
+  onMintCallback?: () => void
 }
 
 export type DropsContractReturnTypes = {
   purchase?: () => void
+  onMintCallback: () => void
   setMintQuantity?: React.ChangeEventHandler<HTMLInputElement>
   collectionData?: any
   collectionAddress?: string
@@ -79,6 +81,7 @@ export type DropsContractReturnTypes = {
 
 const DropsContractContext = React.createContext<DropsContractReturnTypes>({
   purchase: () => {},
+  onMintCallback: () => {},
   transaction: {
     purchaseData: undefined,
     purchaseLoading: false,
@@ -135,6 +138,7 @@ export function DropsContractProvider({
   collectionAddress,
   networkId = '1',
   onSuccessCallback = () => {},
+  onMintCallback = () => {},
 }: DropsContractProps) {
   const { data: collectionData } = useSWRDrop({
     contractAddress: collectionAddress,
@@ -181,6 +185,7 @@ export function DropsContractProvider({
     overrides: {
       value: totalPurchasePrice,
     },
+    enabled: false,
   })
 
   const insufficientFunds = React.useMemo(() => {
@@ -244,8 +249,9 @@ export function DropsContractProvider({
     isSuccess: purchaseSuccess,
   } = useContractWrite({
     ...config,
-    onSuccess() {
-      ;() => onSuccessCallback()
+    onSuccess(data) {
+      console.log(data)
+      onSuccessCallback()
     },
   })
 
@@ -292,6 +298,7 @@ export function DropsContractProvider({
     <DropsContractContext.Provider
       value={{
         collectionData,
+        onMintCallback: onMintCallback,
         purchase,
         transaction: {
           purchaseData,

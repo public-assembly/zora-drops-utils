@@ -1,19 +1,19 @@
-import { DropsComponents } from '@public-assembly/erc721-drops-minter'
-import { DropsContractProvider } from '@public-assembly/zora-drops-utils'
+import { DropsContractProvider, DropsComponents } from '@public-assembly/zora-drops-utils'
 
 export function SimpleMintUi() {
   return (
     <div style={{width: 400}}>
       <DropsComponents.Thumbnail />
-      <DropsComponents.MintButton mintCta='MINT THIS SHIT' />
+      <DropsComponents.MintButton mintCta='MINT THIS SHIT' mintButtonCallback={() => {alert('prop callback in mint button')}}/>
       <DropsComponents.TotalPrice />
+      <DropsComponents.TxStatus />
     </div>
   )
 }
 
 export function SimpleMint() {
   return (
-    <DropsContractProvider collectionAddress='0xb6fa203230ab041dc7433c315871cf551f776070'>
+    <DropsContractProvider collectionAddress='0xb6fa203230ab041dc7433c315871cf551f776070' onMintCallback={() => {alert('mint callback')}}>
       <DropsComponents.EtherscanLink label={false} linkType='address' truncateAddress/>
       <SimpleMintUi />
       <DropsComponents.Metadata />
