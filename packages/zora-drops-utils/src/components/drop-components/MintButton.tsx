@@ -39,10 +39,10 @@ export function MintButton({
   )
 
   const handleMintCall = React.useCallback(() => {
+    purchase()
     onMintCallback()
     mintButtonCallback()
-    purchase()
-  }, [purchase, onMintCallback])
+  }, [purchase, onMintCallback, mintButtonCallback])
 
   return (
     <div className={`drops-ui__mint-button--component`} {...props}>

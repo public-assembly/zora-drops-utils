@@ -13,7 +13,7 @@ export function SimpleMintUi() {
 
 export function SimpleMint() {
   return (
-    <DropsContractProvider collectionAddress='0xb6fa203230ab041dc7433c315871cf551f776070' onMintCallback={() => {alert('mint callback')}}>
+    <DropsContractProvider collectionAddress='0xb6fa203230ab041dc7433c315871cf551f776070' onMintCallback={() => {alert('mint callback')}} onSuccessCallback={() => alert('mint success')}>
       <DropsComponents.EtherscanLink label={false} linkType='address' truncateAddress/>
       <SimpleMintUi />
       <DropsComponents.Metadata />

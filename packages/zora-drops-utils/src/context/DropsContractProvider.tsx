@@ -185,7 +185,6 @@ export function DropsContractProvider({
     overrides: {
       value: totalPurchasePrice,
     },
-    enabled: false,
   })
 
   const insufficientFunds = React.useMemo(() => {
@@ -249,8 +248,7 @@ export function DropsContractProvider({
     isSuccess: purchaseSuccess,
   } = useContractWrite({
     ...config,
-    onSuccess(data) {
-      console.log(data)
+    onSuccess() {
       onSuccessCallback()
     },
   })
