@@ -2,7 +2,7 @@
  * Metadata Components
  */
 
-export { Metadata } from './Metadata'
+export * from './Metadata'
 export { MetadataName } from './MetadataName'
 export { MetadataCreator } from './MetadataCreator'
 export { MetadataDescription } from './MetadataDescription'

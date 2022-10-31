@@ -12,6 +12,7 @@ function Page() {
       {TEST_MINT_CONTRACTS.map((edition: any) =>
         <DropsMinter key={edition} collectionAddress={edition} />
       )}
+
     </section>
   )
 }
