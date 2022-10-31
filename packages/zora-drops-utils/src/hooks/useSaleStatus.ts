@@ -42,6 +42,29 @@ export function useSaleStatus({
     }
   }, [collectionData?.salesConfig?.publicSaleEnd])
 
+  const presaleStartDateFull = React.useMemo(() => {
+    if (collectionData?.salesConfig?.preSaleStart) {
+      const isoDate = new Date(Number(collectionData?.salesConfig?.preSaleStart) * 1000)
+      return {
+        iso: isoDate,
+        unixTime: collectionData?.salesConfig?.preSaleStart,
+        pretty: `${isoDate.toLocaleString(...dateFormat)}`,
+      }
+    }
+  }, [collectionData?.salesConfig?.preSaleStart])
+
+  const presaleEndDateFull = React.useMemo(() => {
+    if (collectionData?.salesConfig?.preSaleEnd) {
+      const isoDate = new Date(Number(collectionData?.salesConfig?.preSaleEnd) * 1000)
+      const formattedEndDate = `${isoDate.toLocaleString(...dateFormat)}`
+      return {
+        iso: isoDate,
+        unixTime: collectionData?.salesConfig?.preSaleEnd,
+        pretty: formattedEndDate !== 'Invalid Date' ? formattedEndDate : undefined,
+      }
+    }
+  }, [collectionData?.salesConfig?.preSaleEnd])
+
   const isSoldOut =
     collectionData?.maxSupply &&
     collectionData?.totalMinted &&
@@ -67,6 +90,8 @@ export function useSaleStatus({
     endDate,
     startDateFull,
     endDateFull,
+    presaleStartDateFull,
+    presaleEndDateFull,
     isSoldOut,
     saleIsActive,
     saleNotStarted,

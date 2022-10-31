@@ -68,6 +68,8 @@ export type DropsContractReturnTypes = {
     endDate?: number
     startDateFull?: SaleDate
     endDateFull?: SaleDate
+    presaleStartDateFull?: SaleDate
+    presaleEndDateFull?: SaleDate
     isSoldOut?: boolean
     saleIsActive?: boolean
     saleNotStarted?: boolean

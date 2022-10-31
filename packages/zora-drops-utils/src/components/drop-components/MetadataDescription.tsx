@@ -3,7 +3,7 @@ import React from 'react'
 import { useDropsContractProvider } from '../../context'
 import { MetaDataProps } from '../../typings'
 
-export function MetadataDescription({ label = 'Creator:', ...props }: MetaDataProps) {
+export function MetadataDescription({ label = 'Description:', ...props }: MetaDataProps) {
   const { collectionData } = useDropsContractProvider()
   return (
     <p className={`drops-ui__metadata--description`} {...props}>

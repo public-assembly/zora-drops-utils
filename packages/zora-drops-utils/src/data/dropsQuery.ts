@@ -5,6 +5,7 @@ export const EDITIONS_STYLE_CONTRACT_METADATA = gql`
     name
     owner
     symbol
+    contractURI
     salesConfig {
       id
       publicSalePrice
@@ -21,7 +22,6 @@ export const EDITIONS_STYLE_CONTRACT_METADATA = gql`
     editionMetadata {
       imageURI
       animationURI
-      contractURI
       description
     }
     creator
