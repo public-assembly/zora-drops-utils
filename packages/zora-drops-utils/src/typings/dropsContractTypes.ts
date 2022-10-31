@@ -63,4 +63,19 @@ export type DropsContractReturnTypes = {
       presaleMerkleRoot?: string
     }
   }
+  saleStatus?: {
+    startDate?: number
+    endDate?: number
+    startDateFull?: SaleDate
+    endDateFull?: SaleDate
+    isSoldOut?: boolean
+    saleIsActive?: boolean
+    saleNotStarted?: boolean
+    saleIsFinished?: boolean
+    merkleRootExists?: boolean
+    presaleExists?: boolean
+    publicSaleExists?: boolean
+    presaleIsActive?: boolean
+    presaleMerkleRoot?: string
+  }
 }

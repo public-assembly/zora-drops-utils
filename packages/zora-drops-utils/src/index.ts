@@ -78,3 +78,4 @@ export const DropsComponents = {
 }
 
 export { DropsMinter } from './components/DropsMinter'
+export { DropsData } from './components/DropsData'

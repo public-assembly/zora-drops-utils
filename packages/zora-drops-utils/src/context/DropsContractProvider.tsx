@@ -10,6 +10,7 @@ import { ethers } from 'ethers'
 import { useSWRDrop } from '../hooks'
 import { dateFormat } from '../constants'
 import { DropsContractReturnTypes, DropsContractProps } from './../typings'
+import { useSaleStatus } from '../hooks/useSaleStatus'
 
 const DEFAULT_MINT_QUANTITY = {
   name: '1',
@@ -19,22 +20,23 @@ const DEFAULT_MINT_QUANTITY = {
 const DropsContractContext = React.createContext<DropsContractReturnTypes>({
   purchase: () => {},
   onMintCallback: () => {},
+  setMintQuantity: () => {},
+  mintQuantity: DEFAULT_MINT_QUANTITY,
   transaction: {
     purchaseData: undefined,
     purchaseLoading: false,
     purchaseSuccess: false,
     txHash: undefined,
   },
-  setMintQuantity: undefined,
-  collectionData: undefined,
-  collectionAddress: undefined,
-  networkId: '1',
-  totalPrice: undefined,
-  mintQuantity: DEFAULT_MINT_QUANTITY,
   errors: {
     unpredictableGasLimit: false,
     insufficientFunds: false,
   },
+  networkId: '1',
+  collectionAddress: undefined,
+  collectionData: undefined,
+  totalPrice: undefined,
+  /* Sales Data */
   purchaseLimit: {
     maxAmount: undefined,
     pastAmount: undefined,
@@ -49,6 +51,7 @@ const DropsContractContext = React.createContext<DropsContractReturnTypes>({
     walletLimit: false,
     walletBalance: undefined,
   },
+  saleStatus: undefined,
   mintStatus: {
     text: undefined,
     isEnded: undefined,
@@ -77,7 +80,7 @@ const DropsContractContext = React.createContext<DropsContractReturnTypes>({
       presaleMerkleRoot: undefined,
     },
   },
-})
+} as DropsContractReturnTypes)
 
 export function useDropsContractProvider() {
   return React.useContext(DropsContractContext)
@@ -118,6 +121,8 @@ export function DropsContractProvider({
   }, [collectionData, collectionData?.salesConfig?.publicSalePrice, mintQuantity])
 
   const { address } = useAccount()
+
+  const saleStatus = useSaleStatus({ collectionData: collectionData })
 
   const { data: balanceOf } = useContractRead({
     addressOrName: collectionAddress,
@@ -277,6 +282,7 @@ export function DropsContractProvider({
             startDate: startDate,
             endDate: endDate,
           },
+          saleStatus: saleStatus,
         } as DropsContractReturnTypes
       }>
       {children}
