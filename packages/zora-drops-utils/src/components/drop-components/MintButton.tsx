@@ -7,6 +7,7 @@ export function MintButton({
   mintCapCta = 'You have minted the maximum amount per wallet.',
   tokenDescriptor = 'NFT',
   appendQuantity = false,
+  mintButtonCallback = () => {},
   ...props
 }: {
   mintCta?: string
@@ -14,8 +15,10 @@ export function MintButton({
   mintCapCta?: string
   tokenDescriptor?: string
   appendQuantity?: boolean
+  mintButtonCallback?: () => void
 }) {
-  const { mintQuantity, errors, balance, purchase } = useDropsContractProvider()
+  const { mintQuantity, errors, balance, purchase, onMintCallback } =
+    useDropsContractProvider()
 
   const cannotMint = React.useMemo(
     () => errors?.insufficientFunds || balance?.walletLimit,
@@ -35,10 +38,16 @@ export function MintButton({
     [mintQuantity, mintQuantity?.name, quantity]
   )
 
+  const handleMintCall = React.useCallback(() => {
+    purchase()
+    onMintCallback()
+    mintButtonCallback()
+  }, [purchase, onMintCallback, mintButtonCallback])
+
   return (
     <div className={`drops-ui__mint-button--component`} {...props}>
       <button
-        onClick={purchase}
+        onClick={handleMintCall}
         className={`
           drops-ui__mint-button--button border-1 w-full border px-2 py-3
           ${cannotMint ? 'drops-ui__mint-button--disabled pointer-events-none' : ''}

@@ -3,6 +3,7 @@ export type DropsContractProps = {
   collectionAddress?: string
   networkId?: '1' | '5'
   onSuccessCallback?: () => void
+  onMintCallback?: () => void
 }
 
 export type SaleDate = {
@@ -13,6 +14,7 @@ export type SaleDate = {
 
 export type DropsContractReturnTypes = {
   purchase?: () => void
+  onMintCallback: () => void
   setMintQuantity?: React.ChangeEventHandler<HTMLInputElement>
   collectionData?: any
   collectionAddress?: string

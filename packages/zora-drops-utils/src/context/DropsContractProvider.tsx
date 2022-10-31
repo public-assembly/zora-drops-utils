@@ -18,6 +18,7 @@ const DEFAULT_MINT_QUANTITY = {
 
 const DropsContractContext = React.createContext<DropsContractReturnTypes>({
   purchase: () => {},
+  onMintCallback: () => {},
   transaction: {
     purchaseData: undefined,
     purchaseLoading: false,
@@ -87,6 +88,7 @@ export function DropsContractProvider({
   collectionAddress,
   networkId = '1',
   onSuccessCallback = () => {},
+  onMintCallback = () => {},
 }: DropsContractProps) {
   const { data: collectionData } = useSWRDrop({
     contractAddress: collectionAddress,
@@ -197,7 +199,7 @@ export function DropsContractProvider({
   } = useContractWrite({
     ...config,
     onSuccess() {
-      ;() => onSuccessCallback()
+      onSuccessCallback()
     },
   })
 
@@ -245,6 +247,7 @@ export function DropsContractProvider({
       value={
         {
           collectionData,
+          onMintCallback: onMintCallback,
           purchase,
           transaction: {
             purchaseData,
