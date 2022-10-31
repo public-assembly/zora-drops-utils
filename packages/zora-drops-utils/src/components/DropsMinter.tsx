@@ -1,4 +1,5 @@
-import React from 'react'
+/* @ts-ignore */
+import * as React from 'react'
 import { DropsContractProvider } from './../context/DropsContractProvider'
 
 import {
@@ -13,25 +14,14 @@ import {
 export function DropsMinter({
   collectionAddress,
   networkId = '1',
-  successCallback,
 }: {
   collectionAddress?: string
   networkId?: '1' | '5'
-  successCallback?: () => void
 }) {
-  const onSuccess = React.useCallback(() => {
-    if (successCallback) {
-      successCallback()
-    }
-  }, [])
-
   if (!collectionAddress) return null
 
   return (
-    <DropsContractProvider
-      collectionAddress={collectionAddress}
-      networkId={networkId}
-      onSuccessCallback={onSuccess}>
+    <DropsContractProvider collectionAddress={collectionAddress} networkId={networkId}>
       <div
         className={`drops-ui__minter--wrapper border-1 grid grid-cols-3 gap-4 rounded-xl border border-solid p-4`}>
         <Thumbnail />
