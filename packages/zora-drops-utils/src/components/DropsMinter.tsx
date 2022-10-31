@@ -11,19 +11,23 @@ import {
   TxStatus,
 } from './drop-components'
 
+interface DropsMinterProps extends React.HTMLAttributes<HTMLElement> {
+  collectionAddress?: string
+  networkId?: '1' | '5'
+}
+
 export function DropsMinter({
   collectionAddress,
   networkId = '1',
-}: {
-  collectionAddress?: string
-  networkId?: '1' | '5'
-}) {
+  ...props
+}: DropsMinterProps) {
   if (!collectionAddress) return null
 
   return (
     <DropsContractProvider collectionAddress={collectionAddress} networkId={networkId}>
       <div
-        className={`drops-ui__minter--wrapper border-1 grid grid-cols-3 gap-4 rounded-xl border border-solid p-4`}>
+        className={`drops-ui__minter--wrapper border-1 grid grid-cols-3 gap-4 rounded-xl border border-solid p-4`}
+        {...props}>
         <Thumbnail />
         <div className="drops-ui__minter--ui-wrapper col-span-2 flex h-full flex-col justify-between">
           <Metadata />
