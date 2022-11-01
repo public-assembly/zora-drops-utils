@@ -12,6 +12,7 @@ import {
   AllowListEntry,
 } from './../typings'
 import { useSaleStatus } from '../hooks/useSaleStatus'
+import { useAllowlistEntry } from '../hooks/useAllowlistEntry'
 
 const DEFAULT_MINT_QUANTITY = {
   name: '1',
@@ -37,8 +38,16 @@ export function DropsContractProvider({
   const [purchaseLoading, setPurchaseLoading] = React.useState(false)
   const [purchaseSuccess, setPurchaseSuccess] = React.useState(false)
   const [purchaseData, setPurchaseData] = React.useState<undefined | any>(undefined)
-
   const [mintQuantity, setMintQuantity] = React.useState(DEFAULT_MINT_QUANTITY)
+
+  const { address } = useAccount()
+
+  const saleStatus = useSaleStatus({ collectionData: collectionData })
+
+  const { allowlistEntry } = useAllowlistEntry({
+    merkleRoot: saleStatus?.presaleMerkleRoot,
+    address: address,
+  })
 
   const handleUpdateMintQuantity = React.useCallback(
     (event: any) => {
@@ -59,10 +68,6 @@ export function DropsContractProvider({
       console.error(err)
     }
   }, [collectionData, collectionData?.salesConfig?.publicSalePrice, mintQuantity])
-
-  const { address } = useAccount()
-
-  const saleStatus = useSaleStatus({ collectionData: collectionData })
 
   const { data: balanceOf } = useContractRead({
     addressOrName: collectionAddress,
@@ -93,14 +98,18 @@ export function DropsContractProvider({
   /* PublicSale Purchase */
   const purchase = React.useCallback(async () => {
     if (!drop || !collectionData?.salesConfig) return
+
     await checkHasContract(drop.address)
 
     try {
+      // console.log('purchase drop', drop, collectionData?.salesConfig)
+
       const tx = await drop.purchase(mintQuantity.queryValue, {
         value: (collectionData?.salesConfig.publicSalePrice as BigNumber).mul(
           BigNumber.from(mintQuantity.queryValue)
         ),
       })
+      console.log(tx)
       setPurchaseLoading(true)
       setPurchaseData(tx)
       if (tx) {
@@ -117,7 +126,6 @@ export function DropsContractProvider({
   /* PreSale Purchase */
   const purchasePresale = React.useCallback(
     async (quantity: number, allowlistEntry?: AllowListEntry) => {
-      console.log(quantity, allowlistEntry)
       if (!drop || !allowlistEntry) return
       await checkHasContract(drop.address)
       try {
@@ -160,14 +168,19 @@ export function DropsContractProvider({
     }
   }, [error])
 
+  const maxPerAddress = React.useMemo(() => {
+    return saleStatus?.presaleIsActive && allowlistEntry
+      ? allowlistEntry?.maxCanMint
+      : collectionData?.salesConfig?.maxSalePurchasePerAddress || 1
+  }, [collectionData, mintQuantity, saleStatus, allowlistEntry])
+
   const purchaseLimit = React.useMemo(() => {
-    const maxPerAddress = collectionData?.salesConfig?.maxSalePurchasePerAddress || 1
     return {
       maxAmount: maxPerAddress,
       pastAmount: mintQuantity.queryValue > Number(maxPerAddress),
       prettyMaxAmount: maxPerAddress === '4294967295' ? '∞' : maxPerAddress,
     }
-  }, [collectionData, mintQuantity])
+  }, [mintQuantity, maxPerAddress])
 
   const inventory = React.useMemo(() => {
     return {
@@ -184,22 +197,25 @@ export function DropsContractProvider({
   const balance = React.useMemo(() => {
     try {
       return {
-        walletLimit: balanceOf >= purchaseLimit?.maxAmount,
+        walletLimit: balanceOf >= maxPerAddress,
         walletBalance: balanceOf && balanceOf.toString(),
       }
     } catch (err) {
       console.error(err)
     }
-  }, [purchaseLimit, balanceOf])
+  }, [purchaseLimit, balanceOf, maxPerAddress])
 
   const prettyPurchasePrice = React.useMemo(() => {
     try {
       return totalPurchasePrice ? ethers.utils.formatUnits(totalPurchasePrice) : ''
     } catch (err) {
-      console.error(err)
+      // console.error(err)
     }
   }, [totalPurchasePrice])
 
+  /**
+   * TODO: Remove the below
+   */
   const startDate = React.useMemo(() => {
     if (collectionData?.salesConfig?.publicSaleStart) {
       const isoDate = new Date(

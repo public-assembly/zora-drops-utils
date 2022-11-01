@@ -5,17 +5,23 @@ import { useAccount } from 'wagmi'
 
 export function MintButton({
   mintCta,
+  presaleMintCta,
   insufficientFundsCta = 'Insufficient Funds',
   mintCapCta = 'You have minted the maximum amount per wallet.',
+  presaleMintCapCta = 'You have reached the maximum amount of presale mints.',
   tokenDescriptor = 'NFT',
+  saleOverCta = 'The sale is now over.',
   appendQuantity = false,
   mintButtonCallback = () => {},
   ...props
 }: {
   mintCta?: string
+  presaleMintCta?: string
   insufficientFundsCta?: string
   mintCapCta?: string
+  presaleMintCapCta?: string
   tokenDescriptor?: string
+  saleOverCta?: string
   appendQuantity?: boolean
   mintButtonCallback?: () => void
 }) {
@@ -54,6 +60,11 @@ export function MintButton({
     [mintQuantity, mintQuantity?.name, quantity]
   )
 
+  const presaleMintCtaCopy = React.useMemo(
+    () => (!mintCta ? `Mint presale ${mintQuantity?.name} ${quantity}` : mintCta),
+    [mintQuantity, mintQuantity?.name, quantity]
+  )
+
   const handleMintCall = React.useCallback(() => {
     purchase()
     onMintCallback()
@@ -66,15 +77,40 @@ export function MintButton({
     mintButtonCallback()
   }, [purchasePresale, mintQuantity?.queryValue, allowlistEntry])
 
+  if (
+    !saleStatus?.saleIsActive &&
+    !saleStatus?.presaleIsActive &&
+    saleStatus?.saleIsFinished
+  ) {
+    return (
+      <div className={`drops-ui__mint-button--component`} {...props}>
+        <p className="drops-ui__mint-button--sale-over">The sale is now over.</p>
+      </div>
+    )
+  }
+
   return (
     <div className={`drops-ui__mint-button--component`} {...props}>
       {!saleStatus?.saleIsActive && saleStatus?.presaleIsActive && (
         <div>
           {accessAllowed ? (
             <button
-              className={`drops-ui__mint-button--button border-1 w-full border px-2 py-3`}
+              className={`
+                drops-ui__mint-button--button border-1 w-full border px-2 py-3
+                ${cannotMint ? 'drops-ui__mint-button--disabled pointer-events-none' : ''}
+              `}
               onClick={handlePresaleMintCall}>
-              <span>Mint Presale</span>
+              {!cannotMint ? (
+                <span className="drops-ui__mint-button--label">
+                  {presaleMintCtaCopy}
+                  <>{appendQuantity && quantity}</>
+                </span>
+              ) : (
+                <span className="drops-ui__mint-button--label drops-ui__mint-button--label-alert">
+                  {errors?.insufficientFunds ? insufficientFundsCta : ''}
+                  {balance?.walletLimit ? presaleMintCapCta : ''}
+                </span>
+              )}
             </button>
           ) : (
             <div>Public sale starts: {saleStatus?.startDateFull?.pretty}</div>

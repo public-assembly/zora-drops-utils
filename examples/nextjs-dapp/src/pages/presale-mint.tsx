@@ -8,6 +8,15 @@ function Page() {
         <DropsComponents.Thumbnail style={{maxWidth: 600}} />
         <DropsComponents.Metadata />
         <DropsComponents.MintButton />
+        <DropsComponents.TxStatus />
+        <DropsData />
+      </DropsContractProvider>
+      <hr></hr>
+      <DropsContractProvider collectionAddress="0xa5c3340d5b27407997beb72eb30b7b234bec6e95" networkId="5">
+        <DropsComponents.Thumbnail style={{maxWidth: 600}} />
+        <DropsComponents.Metadata />
+        <DropsComponents.MintButton />
+        <DropsComponents.TxStatus />
         <DropsData />
       </DropsContractProvider>
     </section>
