@@ -105,13 +105,13 @@ export function DropsContractProvider({
       // console.log('purchase drop', drop, collectionData?.salesConfig)
 
       const tx = await drop.purchase(mintQuantity.queryValue, {
-        value: (collectionData?.salesConfig.publicSalePrice as BigNumber).mul(
-          BigNumber.from(mintQuantity.queryValue)
-        ),
+        value: totalPurchasePrice,
       })
       console.log(tx)
+
       setPurchaseLoading(true)
       setPurchaseData(tx)
+
       if (tx) {
         await tx.wait(2)
         setPurchaseLoading(false)
