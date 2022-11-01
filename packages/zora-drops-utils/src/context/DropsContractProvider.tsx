@@ -11,6 +11,7 @@ import { useSWRDrop } from '../hooks'
 import { dateFormat } from '../constants'
 import { DropsContractReturnTypes, DropsContractProps } from './../typings'
 import { useSaleStatus } from '../hooks/useSaleStatus'
+import { useAllowlistEntry } from '../hooks/useAllowlistEntry'
 
 const DEFAULT_MINT_QUANTITY = {
   name: '1',
@@ -19,6 +20,7 @@ const DEFAULT_MINT_QUANTITY = {
 
 const DropsContractContext = React.createContext<DropsContractReturnTypes>({
   purchase: () => {},
+  purchasePresale: () => {},
   onMintCallback: () => {},
   setMintQuantity: () => {},
   mintQuantity: DEFAULT_MINT_QUANTITY,
@@ -132,6 +134,7 @@ export function DropsContractProvider({
     watch: true,
   })
 
+  /* PublicSale Purchase */
   const { config, error } = usePrepareContractWrite({
     addressOrName: collectionAddress,
     contractInterface: zoraDropsABI.abi,
@@ -142,6 +145,57 @@ export function DropsContractProvider({
     },
   })
 
+  const {
+    write: purchase,
+    data: purchaseData,
+    isLoading: purchaseLoading,
+    isSuccess: purchaseSuccess,
+  } = useContractWrite({
+    ...config,
+    onSuccess() {
+      onSuccessCallback()
+    },
+  })
+
+  /* PreSale Purchase */
+  const { allowlistEntry } = useAllowlistEntry({
+    merkleRoot: saleStatus?.presaleMerkleRoot,
+    address: address,
+  })
+
+  const {
+    config: presalePurchaseConfig,
+    // error: presalePurchaseError
+  } = usePrepareContractWrite({
+    addressOrName: collectionAddress,
+    contractInterface: zoraDropsABI.abi,
+    functionName: 'purchasePresale',
+    args: [
+      mintQuantity.queryValue,
+      allowlistEntry?.maxCanMint,
+      allowlistEntry?.price,
+      allowlistEntry?.proof[0],
+    ],
+    overrides: {
+      value: totalPurchasePrice,
+    },
+  })
+
+  const {
+    write: purchasePresale,
+    /*
+    data: presalePurchaseData,
+    isLoading: presalePurchaseLoading,
+    isSuccess: presalePurchaseSuccess,
+    */
+  } = useContractWrite({
+    ...presalePurchaseConfig,
+    onSuccess() {
+      onSuccessCallback()
+    },
+  })
+
+  /* Checks */
   const insufficientFunds = React.useMemo(() => {
     if (error) {
       /* @ts-ignore */
@@ -196,18 +250,6 @@ export function DropsContractProvider({
     }
   }, [totalPurchasePrice])
 
-  const {
-    write: purchase,
-    data: purchaseData,
-    isLoading: purchaseLoading,
-    isSuccess: purchaseSuccess,
-  } = useContractWrite({
-    ...config,
-    onSuccess() {
-      onSuccessCallback()
-    },
-  })
-
   const startDate = React.useMemo(() => {
     if (collectionData?.salesConfig?.publicSaleStart) {
       const isoDate = new Date(
@@ -254,6 +296,7 @@ export function DropsContractProvider({
           collectionData,
           onMintCallback: onMintCallback,
           purchase,
+          purchasePresale,
           transaction: {
             purchaseData,
             purchaseLoading,

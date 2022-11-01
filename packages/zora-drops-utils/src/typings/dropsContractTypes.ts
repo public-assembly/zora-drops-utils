@@ -14,6 +14,7 @@ export type SaleDate = {
 
 export type DropsContractReturnTypes = {
   purchase?: () => void
+  purchasePresale?: () => void
   onMintCallback: () => void
   setMintQuantity?: React.ChangeEventHandler<HTMLInputElement>
   collectionData?: any
