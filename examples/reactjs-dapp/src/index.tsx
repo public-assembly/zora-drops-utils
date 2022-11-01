@@ -21,7 +21,7 @@ root.render(
         <DropsMinter
           key={edition}
           collectionAddress={edition}
-          networkId='1'
+          networkId='5'
         />
       )}
     </>

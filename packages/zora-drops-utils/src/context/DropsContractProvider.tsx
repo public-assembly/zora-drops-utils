@@ -4,6 +4,7 @@ import {
   usePrepareContractWrite,
   useContractRead,
   useAccount,
+  useWaitForTransaction,
 } from 'wagmi'
 import zoraDropsABI from '@zoralabs/nft-drop-contracts/dist/artifacts/ERC721Drop.sol/ERC721Drop.json'
 import { ethers } from 'ethers'
@@ -35,6 +36,8 @@ export type DropsContractReturnTypes = {
     purchaseLoading: boolean
     purchaseSuccess: boolean
     txHash?: string
+    purchaseWaitData: any
+    purchaseWaitLoading: boolean
   }
   totalPrice?: {
     raw: string | number
@@ -87,6 +90,8 @@ const DropsContractContext = React.createContext<DropsContractReturnTypes>({
     purchaseLoading: false,
     purchaseSuccess: false,
     txHash: undefined,
+    purchaseWaitData: undefined,
+    purchaseWaitLoading: false,
   },
   setMintQuantity: undefined,
   collectionData: undefined,
@@ -253,6 +258,11 @@ export function DropsContractProvider({
     },
   })
 
+  const { data: purchaseWaitData, isLoading: purchaseWaitLoading } =
+    useWaitForTransaction({
+      hash: purchaseData?.hash,
+    })
+
   const startDate = React.useMemo(() => {
     if (collectionData?.salesConfig?.publicSaleStart) {
       const isoDate = new Date(
@@ -303,6 +313,8 @@ export function DropsContractProvider({
           purchaseLoading,
           purchaseSuccess,
           txHash: purchaseData && purchaseData?.hash,
+          purchaseWaitData,
+          purchaseWaitLoading,
         },
         mintQuantity,
         setMintQuantity: handleUpdateMintQuantity,
