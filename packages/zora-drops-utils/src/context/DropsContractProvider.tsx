@@ -34,6 +34,10 @@ export function DropsContractProvider({
     networkId: networkId,
   })
   const [error, setError] = React.useState<any | undefined>(undefined)
+  const [purchaseLoading, setPurchaseLoading] = React.useState(false)
+  const [purchaseSuccess, setPurchaseSuccess] = React.useState(false)
+  const [purchaseData, setPurchaseData] = React.useState<undefined | any>(undefined)
+
   const [mintQuantity, setMintQuantity] = React.useState(DEFAULT_MINT_QUANTITY)
 
   const handleUpdateMintQuantity = React.useCallback(
@@ -90,12 +94,24 @@ export function DropsContractProvider({
   const purchase = React.useCallback(async () => {
     if (!drop || !collectionData?.salesConfig) return
     await checkHasContract(drop.address)
-    const tx = await drop.purchase(mintQuantity.queryValue, {
-      value: (collectionData?.salesConfig.publicSalePrice as BigNumber).mul(
-        BigNumber.from(mintQuantity.queryValue)
-      ),
-    })
-    return tx
+
+    try {
+      const tx = await drop.purchase(mintQuantity.queryValue, {
+        value: (collectionData?.salesConfig.publicSalePrice as BigNumber).mul(
+          BigNumber.from(mintQuantity.queryValue)
+        ),
+      })
+      setPurchaseLoading(true)
+      setPurchaseData(tx)
+      if (tx) {
+        await tx.wait(2)
+        setPurchaseLoading(false)
+        setPurchaseSuccess(true)
+      }
+      return tx
+    } catch (err) {
+      setError(err)
+    }
   }, [drop, collectionData?.salesConfig])
 
   /* PreSale Purchase */
@@ -104,17 +120,27 @@ export function DropsContractProvider({
       console.log(quantity, allowlistEntry)
       if (!drop || !allowlistEntry) return
       await checkHasContract(drop.address)
-      const tx = await drop.purchasePresale(
-        quantity,
-        allowlistEntry.maxCanMint,
-        BigNumber.from(allowlistEntry.price),
-        allowlistEntry.proof.map((e: any) => `0x${e}`),
-        {
-          value: BigNumber.from(allowlistEntry.price).mul(BigNumber.from(quantity)),
+      try {
+        const tx = await drop.purchasePresale(
+          quantity,
+          allowlistEntry.maxCanMint,
+          BigNumber.from(allowlistEntry.price),
+          allowlistEntry.proof.map((e: any) => `0x${e}`),
+          {
+            value: BigNumber.from(allowlistEntry.price).mul(BigNumber.from(quantity)),
+          }
+        )
+        setPurchaseLoading(true)
+        setPurchaseData(tx)
+        if (tx) {
+          await tx.wait(2)
+          setPurchaseLoading(false)
+          setPurchaseSuccess(true)
         }
-      )
-      console.log(tx)
-      return tx
+        return tx
+      } catch (err) {
+        setError(err)
+      }
     },
     [drop]
   )
@@ -220,14 +246,12 @@ export function DropsContractProvider({
         onMintCallback: onMintCallback,
         purchase,
         purchasePresale,
-        /*
         transaction: {
-          purchaseData,
-          purchaseLoading,
-          purchaseSuccess,
+          purchaseData: purchaseData,
+          purchaseLoading: purchaseLoading,
+          purchaseSuccess: purchaseSuccess,
           txHash: purchaseData && purchaseData?.hash,
         },
-        */
         mintQuantity,
         setMintQuantity: handleUpdateMintQuantity,
         totalPrice: {

@@ -13,6 +13,7 @@ export function DropsData({ data = {} }: { data?: any }) {
     balance,
     errors,
     saleStatus,
+    transaction,
   } = useDropsContractProvider()
 
   const { address } = useAccount()
@@ -27,6 +28,7 @@ export function DropsData({ data = {} }: { data?: any }) {
       collectionData
         ? {
             collectionData,
+            transaction,
             mintStatus,
             saleStatus,
             purchaseLimit,
