@@ -113,13 +113,13 @@ export function DropsContractProvider({
           value: BigNumber.from(allowlistEntry.price).mul(BigNumber.from(quantity)),
         }
       )
+      console.log(tx)
       return tx
     },
     [drop]
   )
 
   /* Checks */
-
   const insufficientFunds = React.useMemo(() => {
     if (error) {
       /* @ts-ignore */

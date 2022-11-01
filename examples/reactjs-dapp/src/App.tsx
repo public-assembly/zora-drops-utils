@@ -6,11 +6,21 @@ import { SWRConfig } from 'swr'
 import { NFTFetchConfiguration } from '@zoralabs/nft-hooks'
 import { ZDKFetchStrategy } from '@zoralabs/nft-hooks/dist/strategies'
 import { Header } from './components/Header'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.goerli],
-  [publicProvider()]
+  [
+    jsonRpcProvider({
+      priority: 0,
+      rpc: (chain) => (chain.id === 1 ? 
+        {http: "https://rpc.ankr.com/eth"} :
+        {http: "https://rpc.ankr.com/eth_goerli"}   
+      )}),
+    publicProvider()
+  ]
 )
+
 const { connectors } = getDefaultWallets({
   appName: 'ExampleReactjsDapp',
   chains,
