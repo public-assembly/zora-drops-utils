@@ -61,9 +61,6 @@
     ],
     "*.json": [
       "prettier --write"
-    ],
-    "**/*.{ts,tsx}": [
-      "tsc-files --noEmit"
     ]
   },
   "engines": {

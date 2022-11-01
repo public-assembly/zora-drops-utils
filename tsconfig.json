@@ -20,6 +20,11 @@
     "strictNullChecks": false,
     "target": "es2021"
   },
-  "exclude": ["node_modules", "**/dist/**", "**/node_modules/**"],
-  "include": ["packages/**/*"]
+  "include": ["packages/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/packages/zora-drops-utils/src/constants/typechain/**, packages/zora-drops-utils/src/constants/typechain/**/*.ts, packages/zora-drops-utils/src/constants/typechain/**/*.t.sol"
+  ]
 }

@@ -36,7 +36,7 @@ export function MintButton({
     [errors, balance, errors?.insufficientFunds, balance?.walletLimit]
   )
 
-  const { accessAllowed } = useAllowlistEntry({
+  const { accessAllowed, allowlistEntry } = useAllowlistEntry({
     merkleRoot: saleStatus?.presaleMerkleRoot,
     address: address,
   })
@@ -61,8 +61,10 @@ export function MintButton({
   }, [purchase, onMintCallback, mintButtonCallback])
 
   const handlePresaleMintCall = React.useCallback(() => {
-    purchasePresale()
-  }, [purchasePresale])
+    purchasePresale(mintQuantity?.queryValue, allowlistEntry)
+    onMintCallback()
+    mintButtonCallback()
+  }, [purchasePresale, mintQuantity?.queryValue, allowlistEntry])
 
   return (
     <div className={`drops-ui__mint-button--component`} {...props}>

@@ -1,3 +1,5 @@
+import type { ContractTransaction } from 'ethers'
+
 export type DropsContractProps = {
   children?: React.ReactNode
   collectionAddress?: string
@@ -12,9 +14,13 @@ export type SaleDate = {
   pretty?: string
 }
 
-export type DropsContractReturnTypes = {
+export interface DropsContractReturnTypes {
   purchase?: () => void
-  purchasePresale?: () => void
+  // purchase: (quantity: number) => Promise<ContractTransaction | undefined>
+  purchasePresale: (
+    quantity: number,
+    allowlistEntry?: AllowListEntry
+  ) => Promise<ContractTransaction | undefined>
   onMintCallback: () => void
   setMintQuantity?: React.ChangeEventHandler<HTMLInputElement>
   collectionData?: any
@@ -81,4 +87,11 @@ export type DropsContractReturnTypes = {
     presaleIsActive?: boolean
     presaleMerkleRoot?: string
   }
+}
+
+export interface AllowListEntry {
+  maxCanMint: string
+  user: string
+  price: string
+  proof: string[]
 }
