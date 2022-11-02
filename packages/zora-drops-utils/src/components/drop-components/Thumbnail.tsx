@@ -10,7 +10,11 @@ export function Thumbnail({ ...props }) {
       collectionData?.editionMetadata?.imageURI
         ? addIPFSGateway(collectionData?.editionMetadata?.imageURI)
         : addIPFSGateway(collectionData?.contractURI?.image),
-    [collectionData, collectionData?.editionMetadata?.imageURI]
+    [
+      collectionData,
+      collectionData?.editionMetadata?.imageURI,
+      collectionData?.contractURI?.image,
+    ]
   )
 
   return (
