@@ -3,14 +3,14 @@ import { useDropsContractProvider } from './../../context'
 import { addIPFSGateway } from './../../lib'
 
 export function Thumbnail({ ...props }) {
-  const { collectionData: data } = useDropsContractProvider()
+  const { collectionData } = useDropsContractProvider()
 
   const src = React.useMemo(
     () =>
-      data?.editionMetadata?.imageURI
-        ? addIPFSGateway(data?.editionMetadata?.imageURI)
-        : '',
-    [data, data?.editionMetadata?.imageURI]
+      collectionData?.editionMetadata?.imageURI
+        ? addIPFSGateway(collectionData?.editionMetadata?.imageURI)
+        : addIPFSGateway(collectionData?.contractURI?.image),
+    [collectionData, collectionData?.editionMetadata?.imageURI]
   )
 
   return (

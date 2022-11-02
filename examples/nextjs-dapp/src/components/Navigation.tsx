@@ -10,6 +10,10 @@ const pages = [
     slug: '/presale-mint',
     title: 'Presale Mint'
   },
+  {
+    slug: '/drops-metadata',
+    title: 'Drops Metadata'
+  },
 ]
 
 export function Navigation() {
