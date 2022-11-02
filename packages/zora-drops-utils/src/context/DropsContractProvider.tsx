@@ -27,7 +27,7 @@ export function DropsContractProvider({
   children,
   collectionAddress,
   networkId = '1',
-  // onSuccessCallback = () => {},
+  onSuccessCallback = () => {},
   onMintCallback = () => {},
 }: DropsContractProps) {
   const { data: collectionData } = useSWRDrop({
@@ -44,7 +44,7 @@ export function DropsContractProvider({
 
   const saleStatus = useSaleStatus({ collectionData: collectionData })
 
-  const { allowlistEntry } = useAllowlistEntry({
+  const { allowlistEntry, accessAllowed } = useAllowlistEntry({
     merkleRoot: saleStatus?.presaleMerkleRoot,
     address: address,
   })
@@ -98,30 +98,24 @@ export function DropsContractProvider({
   /* PublicSale Purchase */
   const purchase = React.useCallback(async () => {
     if (!drop || !collectionData?.salesConfig) return
-
     await checkHasContract(drop.address)
-
     try {
-      // console.log('purchase drop', drop, collectionData?.salesConfig)
-
       const tx = await drop.purchase(mintQuantity.queryValue, {
         value: totalPurchasePrice,
       })
-      console.log(tx)
-
       setPurchaseLoading(true)
       setPurchaseData(tx)
-
       if (tx) {
         await tx.wait(2)
         setPurchaseLoading(false)
         setPurchaseSuccess(true)
+        onSuccessCallback()
       }
       return tx
     } catch (err) {
       setError(err)
     }
-  }, [drop, collectionData?.salesConfig])
+  }, [drop, collectionData?.salesConfig, mintQuantity?.queryValue])
 
   /* PreSale Purchase */
   const purchasePresale = React.useCallback(
@@ -144,6 +138,7 @@ export function DropsContractProvider({
           await tx.wait(2)
           setPurchaseLoading(false)
           setPurchaseSuccess(true)
+          onSuccessCallback()
         }
         return tx
       } catch (err) {
@@ -171,14 +166,14 @@ export function DropsContractProvider({
   const maxPerAddress = React.useMemo(() => {
     return saleStatus?.presaleIsActive && allowlistEntry
       ? allowlistEntry?.maxCanMint
-      : collectionData?.salesConfig?.maxSalePurchasePerAddress || 1
+      : Number(collectionData?.salesConfig?.maxSalePurchasePerAddress) || 1
   }, [collectionData, mintQuantity, saleStatus, allowlistEntry])
 
   const purchaseLimit = React.useMemo(() => {
     return {
       maxAmount: maxPerAddress,
       pastAmount: mintQuantity.queryValue > Number(maxPerAddress),
-      prettyMaxAmount: maxPerAddress === '4294967295' ? '∞' : maxPerAddress,
+      prettyMaxAmount: maxPerAddress === 4294967295 ? '∞' : maxPerAddress,
     }
   }, [mintQuantity, maxPerAddress])
 
@@ -198,7 +193,7 @@ export function DropsContractProvider({
     try {
       return {
         walletLimit: balanceOf >= maxPerAddress,
-        walletBalance: balanceOf && balanceOf.toString(),
+        walletBalance: Number(balanceOf),
       }
     } catch (err) {
       console.error(err)
@@ -291,6 +286,10 @@ export function DropsContractProvider({
           endDate: endDate,
         },
         saleStatus: saleStatus,
+        allowList: {
+          allowlistEntry,
+          accessAllowed,
+        },
       }}>
       {children}
     </DropsContractContext.Provider>

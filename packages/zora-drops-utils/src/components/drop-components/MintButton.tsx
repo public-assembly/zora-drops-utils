@@ -9,6 +9,7 @@ export function MintButton({
   insufficientFundsCta = 'Insufficient Funds',
   mintCapCta = 'You have minted the maximum amount per wallet.',
   presaleMintCapCta = 'You have reached the maximum amount of presale mints.',
+  presaleCannotMintCta,
   tokenDescriptor = 'NFT',
   saleOverCta = 'The sale is now over.',
   appendQuantity = false,
@@ -17,6 +18,7 @@ export function MintButton({
 }: {
   mintCta?: string
   presaleMintCta?: string
+  presaleCannotMintCta?: string
   insufficientFundsCta?: string
   mintCapCta?: string
   presaleMintCapCta?: string
@@ -48,11 +50,8 @@ export function MintButton({
   })
 
   const quantity = React.useMemo(
-    () =>
-      `${tokenDescriptor}${
-        mintQuantity?.queryValue > 1 || balance?.walletBalance === 0 ? 's' : ''
-      }`,
-    []
+    () => `${tokenDescriptor}${mintQuantity?.queryValue > 1 ? 's' : ''}`,
+    [mintQuantity?.queryValue, balance?.walletBalance]
   )
 
   const mintCtaCopy = React.useMemo(
@@ -63,6 +62,14 @@ export function MintButton({
   const presaleMintCtaCopy = React.useMemo(
     () => (!mintCta ? `Mint presale ${mintQuantity?.name} ${quantity}` : mintCta),
     [mintQuantity, mintQuantity?.name, quantity]
+  )
+
+  const presaleCannotMintCtaCopy = React.useMemo(
+    () =>
+      !presaleCannotMintCta
+        ? `Public sale starts: ${saleStatus?.startDateFull?.pretty}`
+        : presaleCannotMintCta,
+    [saleStatus, saleStatus?.startDateFull?.pretty]
   )
 
   const handleMintCall = React.useCallback(() => {
@@ -92,7 +99,7 @@ export function MintButton({
   return (
     <div className={`drops-ui__mint-button--component`} {...props}>
       {!saleStatus?.saleIsActive && saleStatus?.presaleIsActive && (
-        <div>
+        <>
           {accessAllowed ? (
             <button
               className={`
@@ -113,9 +120,11 @@ export function MintButton({
               )}
             </button>
           ) : (
-            <div>Public sale starts: {saleStatus?.startDateFull?.pretty}</div>
+            <span className="drops-ui__mint-button--presale-cannot-mint-cta">
+              {presaleCannotMintCtaCopy}
+            </span>
           )}
-        </div>
+        </>
       )}
       {saleStatus?.saleIsActive && !saleStatus?.presaleIsActive && (
         <button

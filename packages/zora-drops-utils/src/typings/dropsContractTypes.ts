@@ -14,9 +14,15 @@ export type SaleDate = {
   pretty?: string
 }
 
+export interface AllowListEntry {
+  maxCanMint: string
+  user: string
+  price: string
+  proof: string[]
+}
+
 export interface DropsContractReturnTypes {
-  purchase?: () => void
-  // purchase: (quantity: number) => Promise<ContractTransaction | undefined>
+  purchase: () => Promise<ContractTransaction | undefined>
   purchasePresale: (
     quantity: number,
     allowlistEntry?: AllowListEntry
@@ -56,7 +62,7 @@ export interface DropsContractReturnTypes {
   }
   balance?: {
     walletLimit: boolean
-    walletBalance: number | string
+    walletBalance: number
   }
   mintStatus?: {
     text?: string
@@ -87,11 +93,8 @@ export interface DropsContractReturnTypes {
     presaleIsActive?: boolean
     presaleMerkleRoot?: string
   }
-}
-
-export interface AllowListEntry {
-  maxCanMint: string
-  user: string
-  price: string
-  proof: string[]
+  allowList?: {
+    allowlistEntry?: AllowListEntry
+    accessAllowed?: boolean
+  }
 }

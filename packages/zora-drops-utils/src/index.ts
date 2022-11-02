@@ -7,7 +7,13 @@ export {
 
 export { DROPS_SUBGRAPH_URLS, returnDropEndpoint } from './constants'
 
-export { useDrop, useSWRDrop, useDropsArray, useSWRDropsArray } from './hooks'
+export {
+  useDrop,
+  useSWRDrop,
+  useDropsArray,
+  useSWRDropsArray,
+  useAllowlistEntry,
+} from './hooks'
 
 export {
   DropContextProvider,
@@ -27,6 +33,7 @@ export type {
   DropsContractReturnTypes,
   SaleDate,
   DropsContractProps,
+  AllowListEntry,
 } from './typings'
 
 /**

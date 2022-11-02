@@ -1,8 +1,6 @@
 /* @ts-ignore */
 import * as React from 'react'
 import { useDropsContractProvider } from './../context/DropsContractProvider'
-import { useAllowlistEntry } from '../hooks/useAllowlistEntry'
-import { useAccount } from 'wagmi'
 
 export function DropsData({ data = {} }: { data?: any }) {
   const {
@@ -14,14 +12,8 @@ export function DropsData({ data = {} }: { data?: any }) {
     errors,
     saleStatus,
     transaction,
+    allowList,
   } = useDropsContractProvider()
-
-  const { address } = useAccount()
-
-  const { allowlistEntry, accessAllowed } = useAllowlistEntry({
-    merkleRoot: saleStatus?.presaleMerkleRoot,
-    address: address,
-  })
 
   const dataToRender = React.useMemo(
     () =>
@@ -35,10 +27,7 @@ export function DropsData({ data = {} }: { data?: any }) {
             inventory,
             balance,
             errors,
-            allowList: {
-              allowlistEntry,
-              accessAllowed,
-            },
+            allowList,
           }
         : data,
     [data, collectionData]

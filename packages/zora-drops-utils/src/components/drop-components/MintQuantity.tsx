@@ -8,7 +8,8 @@ export function MintQuantity({ ...props }) {
 
   const inputMax = React.useMemo(() => {
     try {
-      return Number(purchaseLimit?.maxAmount) - Number(balance?.walletBalance)
+      const max = purchaseLimit?.maxAmount - balance?.walletBalance
+      return max.toString()
     } catch (err) {
       console.error(err)
       return 1
