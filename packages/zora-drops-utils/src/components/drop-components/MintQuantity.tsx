@@ -12,7 +12,7 @@ export function MintQuantity({ ...props }) {
       return max.toString()
     } catch (err) {
       console.error(err)
-      return 1
+      return '1'
     }
   }, [purchaseLimit, balance])
 
