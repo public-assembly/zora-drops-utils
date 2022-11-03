@@ -7,8 +7,6 @@ export const DROPS_SUBGRAPH_URLS: ChainIdKey = {
   5: 'https://api.thegraph.com/subgraphs/name/iainnash/erc721drop-goerli',
 }
 
-export type ChainIds = Networks
-
 export const returnDropEndpoint = (
   /**
    * Expects ID of chain

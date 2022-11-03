@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request'
-import { returnDropEndpoint, ChainIds } from '../constants'
+import { returnDropEndpoint } from '../constants'
+import { Networks } from '../typings'
 import { addIPFSGateway } from '../lib'
 
 export async function decodeContractUri(contractURI?: string) {
@@ -21,7 +22,7 @@ export async function decodeContractUri(contractURI?: string) {
 }
 
 export async function dropsFetcher(
-  chainId: ChainIds,
+  chainId: Networks,
   collectionAddress: string,
   query: any
 ) {

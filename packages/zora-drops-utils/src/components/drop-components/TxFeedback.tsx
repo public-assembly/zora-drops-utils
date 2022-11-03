@@ -1,6 +1,6 @@
 /* @ts-ignore */
 import * as React from 'react'
-import { useDropsContractProvider } from '@public-assembly/zora-drops-utils'
+import { useDropsContractProvider } from '../../context/DropsContractProvider'
 
 interface TxFeedbackProps extends React.HTMLAttributes<HTMLDivElement> {
   useOpenSea?: boolean

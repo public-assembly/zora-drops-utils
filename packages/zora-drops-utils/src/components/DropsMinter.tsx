@@ -1,7 +1,7 @@
 /* @ts-ignore */
 import * as React from 'react'
 import { DropsContractProvider } from './../context/DropsContractProvider'
-import { Networks, DropsContractProps } from '../typings'
+import { DropsContractProps } from '../typings'
 
 import {
   Metadata,

@@ -16,7 +16,7 @@ export function DropsMinter({
   successCallback,
 }: {
   collectionAddress?: string
-  networkId?: Networks
+  networkId?: '1' | '5'
   successCallback?: () => void
 }) {
   const onSuccess = React.useCallback(() => {

@@ -1,11 +1,11 @@
-import { ChainIds } from '../constants'
+import { Networks } from './dropsContractTypes'
 
 export type DropsRequestProps = {
   contractAddress: string
-  networkId?: ChainIds
+  networkId?: Networks
 }
 
 export type DropsArrayRequestProps = {
   contractAddresses: string[]
-  networkId?: ChainIds
+  networkId?: Networks
 }
