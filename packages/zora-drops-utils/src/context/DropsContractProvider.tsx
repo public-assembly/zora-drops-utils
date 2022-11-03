@@ -8,7 +8,7 @@ import { useSWRDrop } from '../hooks'
 import { dateFormat } from '../constants'
 import {
   DropsContractReturnTypes,
-  DropsContractProps,
+  DropsContractProviderProps,
   AllowListEntry,
 } from './../typings'
 import { useSaleStatus } from '../hooks/useSaleStatus'
@@ -27,9 +27,10 @@ export function DropsContractProvider({
   children,
   collectionAddress,
   networkId = '1',
+  ipfsGateway,
   onSuccessCallback = () => {},
   onMintCallback = () => {},
-}: DropsContractProps) {
+}: DropsContractProviderProps) {
   const { data: collectionData } = useSWRDrop({
     contractAddress: collectionAddress,
     networkId: networkId,
@@ -253,6 +254,9 @@ export function DropsContractProvider({
   return (
     <DropsContractContext.Provider
       value={{
+        collectionAddress: collectionAddress,
+        networkId: networkId,
+        ipfsGateway,
         collectionData,
         onMintCallback: onMintCallback,
         purchase,
@@ -269,8 +273,6 @@ export function DropsContractProvider({
           raw: totalPurchasePrice,
           pretty: prettyPurchasePrice,
         },
-        collectionAddress: collectionAddress,
-        networkId: networkId,
         errors: {
           insufficientFunds: insufficientFunds,
           unpredictableGasLimit: unpredictableGasLimit,

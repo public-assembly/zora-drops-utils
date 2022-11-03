@@ -3,6 +3,21 @@ import { useAllowlistEntry } from '../../hooks/useAllowlistEntry'
 import { useDropsContractProvider } from './../../context'
 import { useAccount } from 'wagmi'
 
+interface MintButtonProps extends React.HTMLAttributes<HTMLElement> {
+  mintCta?: string
+  presaleMintCta?: string
+  presaleCannotMintCta?: string
+  insufficientFundsCta?: string
+  mintCapCta?: string
+  presaleMintCapCta?: string
+  tokenDescriptor?: string
+  saleOverCta?: string
+  saleSoldOutCta?: string
+  appendQuantity?: boolean
+  useSecondaryMarketLink?: boolean
+  mintButtonCallback?: () => void
+}
+
 export function MintButton({
   mintCta,
   presaleMintCta,
@@ -12,25 +27,18 @@ export function MintButton({
   presaleCannotMintCta,
   tokenDescriptor = 'NFT',
   saleOverCta = 'The sale is now over.',
+  saleSoldOutCta = 'Sold out.',
   appendQuantity = false,
+  useSecondaryMarketLink = false,
   mintButtonCallback = () => {},
   ...props
-}: {
-  mintCta?: string
-  presaleMintCta?: string
-  presaleCannotMintCta?: string
-  insufficientFundsCta?: string
-  mintCapCta?: string
-  presaleMintCapCta?: string
-  tokenDescriptor?: string
-  saleOverCta?: string
-  appendQuantity?: boolean
-  mintButtonCallback?: () => void
-}) {
+}: MintButtonProps) {
   const { address } = useAccount()
 
   const {
     mintQuantity,
+    collectionAddress,
+    networkId,
     errors,
     balance,
     purchase,
@@ -84,6 +92,30 @@ export function MintButton({
     mintButtonCallback()
   }, [purchasePresale, mintQuantity?.queryValue, allowlistEntry])
 
+  const SecondaryMarket = () => (
+    <p className="drops-ui__mint-button--sale-over grid">
+      <span>There may be NFTs for sale on the secondary market.</span>
+      <a
+        href={`https://market.zora.co/collections/${collectionAddress}`}
+        target="_blank"
+        rel="noreferrer"
+        className="underline">
+        View on Zora Marketplace
+      </a>
+    </p>
+  )
+
+  if (saleStatus?.isSoldOut && !saleStatus?.saleIsFinished) {
+    return (
+      <div className={`drops-ui__mint-button--component`} {...props}>
+        <div className="flex flex-col gap-2">
+          <p className="drops-ui__mint-button--sold-out">{saleSoldOutCta}</p>
+          {networkId === '1' && useSecondaryMarketLink && <SecondaryMarket />}
+        </div>
+      </div>
+    )
+  }
+
   if (
     !saleStatus?.saleIsActive &&
     !saleStatus?.presaleIsActive &&
@@ -91,7 +123,10 @@ export function MintButton({
   ) {
     return (
       <div className={`drops-ui__mint-button--component`} {...props}>
-        <p className="drops-ui__mint-button--sale-over">The sale is now over.</p>
+        <div className="flex flex-col gap-2">
+          <p className="drops-ui__mint-button--sale-over">{saleOverCta}</p>
+          {networkId === '1' && useSecondaryMarketLink && <SecondaryMarket />}
+        </div>
       </div>
     )
   }

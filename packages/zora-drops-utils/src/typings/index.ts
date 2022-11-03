@@ -6,5 +6,7 @@ export type {
   DropsContractReturnTypes,
   SaleDate,
   DropsContractProps,
+  DropsContractProviderProps,
   AllowListEntry,
+  Networks,
 } from './dropsContractTypes'

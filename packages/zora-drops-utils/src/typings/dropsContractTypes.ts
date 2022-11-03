@@ -1,10 +1,35 @@
 import type { ContractTransaction } from 'ethers'
 
-export type DropsContractProps = {
+export type Networks = '1' | '5'
+
+export interface DropsContractProps {
   children?: React.ReactNode
+  /**
+   * @default: undefined
+   * Currently supports Zora's ERC721 Drops contracts both Editions & Drops style metadata
+   */
   collectionAddress?: string
-  networkId?: '1' | '5'
+  /**
+   * @default: '1'
+   * Goerli and Mainnet Ethereum networks supported
+   */
+  networkId?: Networks
+  /**
+   * @default: undefined
+   * Pass in a custom ipfs gateway to override https://ipfs.io/
+   * Expects the gateway uri ie. mygateway.mypinata.cloud
+   */
+  ipfsGateway?: string
+}
+
+export interface DropsContractProviderProps extends DropsContractProps {
+  /**
+   * Function prop for successful mint
+   */
   onSuccessCallback?: () => void
+  /**
+   * Function prop for mint button onClick event
+   */
   onMintCallback?: () => void
 }
 
@@ -31,7 +56,8 @@ export interface DropsContractReturnTypes {
   setMintQuantity?: React.ChangeEventHandler<HTMLInputElement>
   collectionData?: any
   collectionAddress?: string
-  networkId?: '1' | '5'
+  networkId?: Networks
+  ipfsGateway?: string
   transaction?: {
     purchaseData: any
     purchaseLoading: boolean

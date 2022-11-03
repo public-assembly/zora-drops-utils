@@ -3,7 +3,7 @@ import React from 'react'
 import { useDropsContractProvider } from './../../context'
 
 export function MintQuantity({ ...props }) {
-  const { mintQuantity, errors, purchaseLimit, balance, setMintQuantity } =
+  const { mintQuantity, errors, purchaseLimit, balance, setMintQuantity, saleStatus } =
     useDropsContractProvider()
 
   const inputMax = React.useMemo(() => {
@@ -16,6 +16,8 @@ export function MintQuantity({ ...props }) {
     }
   }, [purchaseLimit, balance])
 
+  if (saleStatus?.isSoldOut || saleStatus?.saleIsFinished) return null
+
   return (
     <div className={`drops-ui__mint-quantity--component`} {...props}>
       <input
@@ -27,7 +29,7 @@ export function MintQuantity({ ...props }) {
         value={mintQuantity?.name}
         onChange={setMintQuantity}
         className={`
-          drops-ui__mint-quantity--input form-input border-1 border px-4 py-3
+          drops-ui__mint-quantity--input form-input border-1 w-full border px-4 py-3
           ${
             errors?.insufficientFunds
               ? 'drops-ui__mint-quantity--input-disabled pointer-events-none opacity-30'

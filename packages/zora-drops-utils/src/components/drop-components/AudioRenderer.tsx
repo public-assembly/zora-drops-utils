@@ -6,13 +6,13 @@ export interface AudioRendererProps extends React.AudioHTMLAttributes<HTMLElemen
 
 export const AudioRenderer = React.forwardRef<HTMLAudioElement, AudioRendererProps>(
   (props, ref) => {
-    const { collectionData: data } = useDropsContractProvider()
+    const { collectionData, ipfsGateway } = useDropsContractProvider()
     const src = React.useMemo(
       () =>
-        data?.editionMetadata?.animationURI
-          ? addIPFSGateway(data?.editionMetadata?.animationURI)
+        collectionData?.editionMetadata?.animationURI
+          ? addIPFSGateway(collectionData?.editionMetadata?.animationURI, ipfsGateway)
           : '',
-      [data, data?.editionMetadata?.animationURI]
+      [collectionData, collectionData?.editionMetadata?.animationURI]
     )
 
     return <audio ref={ref} className="drops-ui__audio-renderer" {...props} src={src} />

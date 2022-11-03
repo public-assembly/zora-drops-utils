@@ -16,13 +16,13 @@ function Page() {
   return (
     <section className="flex flex-col gap-4">
       <h1>Nextjs App</h1>
-      <div className="grid grid-cols-3">
+      <div className="grid grid-cols-3 gap-4">
         {TESTNET_MINT_CONTRACTS.map((edition: any) =>
           <DropsMinter
             key={edition}
             collectionAddress={edition}
+            ipfsGateway="zora-prod.mypinata.cloud"
             networkId="5"
-            className="grid w-full relative"
           />
         )}
       </div>

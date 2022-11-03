@@ -6,13 +6,13 @@ export interface VideoRendererProps extends React.VideoHTMLAttributes<HTMLElemen
 
 export const VideoRenderer = React.forwardRef<HTMLVideoElement, VideoRendererProps>(
   (props, ref) => {
-    const { collectionData: data } = useDropsContractProvider()
+    const { collectionData, ipfsGateway } = useDropsContractProvider()
     const src = React.useMemo(
       () =>
-        data?.editionMetadata?.animationURI
-          ? addIPFSGateway(data?.editionMetadata?.animationURI)
+        collectionData?.editionMetadata?.animationURI
+          ? addIPFSGateway(collectionData?.editionMetadata?.animationURI, ipfsGateway)
           : '',
-      [data, data?.editionMetadata?.animationURI]
+      [collectionData, collectionData?.editionMetadata?.animationURI]
     )
 
     return <video ref={ref} className="drops-ui__video-renderer" {...props} src={src} />
