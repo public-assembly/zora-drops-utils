@@ -27,6 +27,7 @@ export { WalletBalance } from './WalletBalance'
  */
 
 export { TxStatus } from './TxStatus'
+export { TxFeedback } from './TxFeedback'
 export { MintButton } from './MintButton'
 export { MintQuantity } from './MintQuantity'
 

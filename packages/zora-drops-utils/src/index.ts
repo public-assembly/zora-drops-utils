@@ -59,6 +59,7 @@ import {
   VideoRenderer,
   AudioRenderer,
   TxStatus,
+  TxFeedback,
   EtherscanLink,
 } from './components/drop-components'
 
@@ -79,6 +80,7 @@ export const DropsComponents = {
   SaleEndedAlert,
   Thumbnail,
   TxStatus,
+  TxFeedback,
   EtherscanLink,
   VideoRenderer,
   AudioRenderer,
