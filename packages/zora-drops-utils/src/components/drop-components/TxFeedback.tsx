@@ -25,7 +25,7 @@ export function TxFeedback({
             className="underline"
             target="_blank"
             rel="noreferrer"
-            href={`https://${networkId === '5' ? 'goerli' : ''}.etherscan.io/tx/${
+            href={`https://${networkId === '5' ? 'goerli.' : ''}etherscan.io/tx/${
               transaction?.txHash
             }`}>
             View on Etherscan
@@ -40,7 +40,7 @@ export function TxFeedback({
             className="underline"
             target="_blank"
             rel="noreferrer"
-            href={`https://${networkId === '5' ? 'goerli' : ''}.etherscan.io/tx/${
+            href={`https://${networkId === '5' ? 'goerli.' : ''}etherscan.io/tx/${
               transaction?.txHash
             }`}>
             View on Etherscan
@@ -50,8 +50,8 @@ export function TxFeedback({
             target="_blank"
             rel="noreferrer"
             href={`https://${
-              networkId === '5' ? 'testnet' : ''
-            }.create.zora.co/collections/${collectionAddress}`}>
+              networkId === '5' ? 'testnet.' : ''
+            }create.zora.co/collections/${collectionAddress}`}>
             View on Zora Create
           </a>
           {useZoraMarket && networkId === '1' && (
@@ -70,8 +70,8 @@ export function TxFeedback({
               target="_blank"
               rel="noreferrer"
               href={`https://${
-                networkId === '5' ? 'testnets' : ''
-              }.opensea.io/assets?search[query]=${collectionAddress}`}>
+                networkId === '5' ? 'testnets.' : ''
+              }opensea.io/assets?search[query]=${collectionAddress}`}>
               View on Opensea
             </a>
           )}
