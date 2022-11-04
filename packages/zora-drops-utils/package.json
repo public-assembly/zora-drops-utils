@@ -1,6 +1,6 @@
 {
   "name": "@public-assembly/zora-drops-utils",
-  "version": "0.1.58",
+  "version": "0.1.59",
   "description": "Example package with some web3 peer dependencies",
   "main": "dist/public-assembly-zora-drops-utils.cjs.js",
   "module": "dist/public-assembly-zora-drops-utils.esm.js",

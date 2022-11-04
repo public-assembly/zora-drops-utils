@@ -65,10 +65,12 @@ export function useSaleStatus({
     }
   }, [collectionData?.salesConfig?.preSaleEnd])
 
+  console.log(collectionData)
+
   const isSoldOut =
     collectionData?.maxSupply &&
     collectionData?.totalMinted &&
-    collectionData?.totalMinted >= collectionData?.maxSupply
+    Number(collectionData?.totalMinted) >= Number(collectionData?.maxSupply)
 
   const saleIsActive = startDate <= Date.now() && endDate > Date.now()
   const saleNotStarted = startDate > Date.now()
