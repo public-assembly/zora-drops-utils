@@ -28,12 +28,14 @@ export function DropsContractProvider({
   collectionAddress,
   networkId = '1',
   ipfsGateway,
+  refreshInterval = 10000,
   onSuccessCallback = () => {},
   onMintCallback = () => {},
 }: DropsContractProviderProps) {
   const { data: collectionData } = useSWRDrop({
     contractAddress: collectionAddress,
     networkId: networkId,
+    refreshInterval: refreshInterval,
   })
   const [error, setError] = React.useState<any | undefined>(undefined)
   const [purchaseLoading, setPurchaseLoading] = React.useState(false)
@@ -75,7 +77,9 @@ export function DropsContractProvider({
     contractInterface: zoraDropsABI.abi,
     functionName: 'balanceOf',
     args: [address],
-    watch: true,
+    watch: false,
+    cacheOnBlock: true,
+    enabled: false,
   })
 
   /* initialize contract */

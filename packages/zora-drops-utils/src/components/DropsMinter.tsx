@@ -18,15 +18,16 @@ export function DropsMinter({
   collectionAddress,
   networkId = '1',
   ipfsGateway,
+  refreshInterval,
   ...props
 }: DropsContractProps & DropsMinter) {
   if (!collectionAddress) return null
-
   return (
     <DropsContractProvider
       collectionAddress={collectionAddress}
       networkId={networkId}
-      ipfsGateway={ipfsGateway}>
+      ipfsGateway={ipfsGateway}
+      refreshInterval={refreshInterval}>
       <div
         className={`drops-ui__minter--wrapper border-1 grid w-full gap-4 rounded-xl border border-solid p-4`}
         {...props}>

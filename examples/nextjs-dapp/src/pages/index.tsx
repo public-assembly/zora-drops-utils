@@ -1,10 +1,4 @@
 import { DropsMinter } from '@public-assembly/zora-drops-utils'
-/*
-const TEST_MINT_CONTRACTS = [
-  '0xE3d8572a5B1e47cD87A6222A5F989332E88DeA69',
-  '0x47191cb94c0b6925db9f15e000cf8e3e8864fc9b',
-]
-*/
 
 const TESTNET_MINT_CONTRACTS = [
   '0xa3ba36ce1af5fa6bb8ab35a61c8ae72293b38b32',
@@ -23,6 +17,7 @@ function Page() {
             collectionAddress={edition}
             ipfsGateway="zora-prod.mypinata.cloud"
             networkId="5"
+            refreshInterval={0}
           />
         )}
       </div>

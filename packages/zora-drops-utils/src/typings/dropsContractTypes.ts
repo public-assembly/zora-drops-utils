@@ -20,6 +20,11 @@ export interface DropsContractProps {
    * Expects the gateway uri ie. mygateway.mypinata.cloud
    */
   ipfsGateway?: string
+  /**
+   * @default: 10000
+   * RPC Fetch refresh interval
+   */
+  refreshInterval?: number
 }
 
 export interface DropsContractProviderProps extends DropsContractProps {
