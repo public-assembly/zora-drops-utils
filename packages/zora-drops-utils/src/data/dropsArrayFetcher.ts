@@ -1,18 +1,20 @@
 import { dropsFetcher } from './dropsFetcher'
-import { EDITION_QUERY } from './dropsQuery'
 import { DropsArrayRequestProps } from '../typings/requestTypes'
 
 export async function dropsArrayFetcher({
   contractAddresses,
   networkId = '1',
-}: DropsArrayRequestProps) {
+  ipfsGateway,
+}: DropsArrayRequestProps & {
+  ipfsGateway?: string
+}) {
   try {
     const editions = await Promise.all(
       contractAddresses.map(async (contractAddress) => {
         const metadata = await dropsFetcher(
           networkId,
           contractAddress.toLowerCase(),
-          EDITION_QUERY
+          ipfsGateway
         )
           .then((res) => {
             return res

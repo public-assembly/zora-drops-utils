@@ -1,6 +1,6 @@
 export {
-  EDITIONS_STYLE_CONTRACT_METADATA,
-  EDITION_QUERY,
+  ERC721_DROPS_CONTRACT_METADATA,
+  DROPS_QUERY,
   dropsFetcher,
   dropsArrayFetcher,
 } from './data'

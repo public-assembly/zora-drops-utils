@@ -36,6 +36,7 @@ export function DropsContractProvider({
     contractAddress: collectionAddress,
     networkId: networkId,
     refreshInterval: refreshInterval,
+    ipfsGateway: ipfsGateway,
   })
   const [error, setError] = React.useState<any | undefined>(undefined)
   const [purchaseLoading, setPurchaseLoading] = React.useState(false)

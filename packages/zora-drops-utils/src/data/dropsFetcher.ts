@@ -1,30 +1,13 @@
 import { GraphQLClient } from 'graphql-request'
 import { returnDropEndpoint } from '../constants'
 import { Networks } from '../typings'
-import { addIPFSGateway } from '../lib'
-
-export async function decodeContractUri(contractURI?: string) {
-  const url = contractURI ? addIPFSGateway(contractURI) : undefined
-  try {
-    const contractURIData = await fetch(url)
-      .then((res) => res.text())
-      .then((t) => {
-        try {
-          return JSON.parse(t.replace(/\\n/g, ' '))
-        } catch (e) {
-          return undefined
-        }
-      })
-    return contractURIData
-  } catch (err) {
-    console.error(err)
-  }
-}
+import { DROPS_QUERY } from './dropsQuery'
+import { decodeContractUri } from '../lib/decodeContractURI'
 
 export async function dropsFetcher(
   chainId: Networks,
   collectionAddress: string,
-  query: any
+  ipfsGateway?: string
 ) {
   const variables = {
     collectionAddress: collectionAddress.toLowerCase(),
@@ -33,11 +16,15 @@ export async function dropsFetcher(
   const endpoint = returnDropEndpoint(chainId)
   const client = new GraphQLClient(endpoint, { headers: {} })
 
-  const data = await client.request(query, variables).then((data) => data?.erc721Drop)
-  const contractURI = await decodeContractUri(data?.contractURI)
+  const data = await client
+    .request(DROPS_QUERY, variables)
+    .then((data) => data?.erc721Drop)
+  const contractURI = data?.contractURI
+    ? await decodeContractUri(data?.contractURI, ipfsGateway)
+    : null
 
   return {
     ...data,
-    contractURI: contractURI,
+    contractURI: contractURI ? contractURI : null,
   }
 }
