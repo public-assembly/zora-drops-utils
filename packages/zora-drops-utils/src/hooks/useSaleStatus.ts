@@ -65,8 +65,6 @@ export function useSaleStatus({
     }
   }, [collectionData?.salesConfig?.preSaleEnd])
 
-  console.log(collectionData)
-
   const isSoldOut =
     collectionData?.maxSupply &&
     collectionData?.totalMinted &&
