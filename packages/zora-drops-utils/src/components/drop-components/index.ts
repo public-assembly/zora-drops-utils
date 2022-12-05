@@ -2,7 +2,7 @@
  * Metadata Components
  */
 
-export { Metadata } from './Metadata'
+export * from './Metadata'
 export { MetadataName } from './MetadataName'
 export { MetadataCreator } from './MetadataCreator'
 export { MetadataDescription } from './MetadataDescription'
@@ -27,6 +27,7 @@ export { WalletBalance } from './WalletBalance'
  */
 
 export { TxStatus } from './TxStatus'
+export { TxFeedback } from './TxFeedback'
 export { MintButton } from './MintButton'
 export { MintQuantity } from './MintQuantity'
 

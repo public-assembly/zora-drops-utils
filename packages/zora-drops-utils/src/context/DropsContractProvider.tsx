@@ -1,151 +1,57 @@
 import React from 'react'
-import {
-  useContractWrite,
-  usePrepareContractWrite,
-  useContractRead,
-  useAccount,
-} from 'wagmi'
+import { BigNumber } from 'ethers'
+import { useContractRead, useAccount, useSigner } from 'wagmi'
 import zoraDropsABI from '@zoralabs/nft-drop-contracts/dist/artifacts/ERC721Drop.sol/ERC721Drop.json'
+import { ERC721Drop__factory } from '../constants/typechain'
 import { ethers } from 'ethers'
 import { useSWRDrop } from '../hooks'
 import { dateFormat } from '../constants'
+import {
+  DropsContractReturnTypes,
+  DropsContractProviderProps,
+  AllowListEntry,
+} from './../typings'
+import { useSaleStatus } from '../hooks/useSaleStatus'
+import { useAllowlistEntry } from '../hooks/useAllowlistEntry'
 
 const DEFAULT_MINT_QUANTITY = {
   name: '1',
   queryValue: 1,
 }
 
-export type DropsContractProps = {
-  children?: React.ReactNode
-  collectionAddress?: string
-  networkId?: '1' | '5'
-  onSuccessCallback?: () => void
-  onMintCallback?: () => void
-}
-
-export type DropsContractReturnTypes = {
-  purchase?: () => void
-  onMintCallback: () => void
-  setMintQuantity?: React.ChangeEventHandler<HTMLInputElement>
-  collectionData?: any
-  collectionAddress?: string
-  networkId?: '1' | '5'
-  transaction?: {
-    purchaseData: any
-    purchaseLoading: boolean
-    purchaseSuccess: boolean
-    txHash?: string
-  }
-  totalPrice?: {
-    raw: string | number
-    pretty: string | number
-  }
-  mintQuantity?: {
-    name: string
-    queryValue: number
-  }
-  errors: {
-    unpredictableGasLimit: boolean
-    insufficientFunds: boolean
-  }
-  purchaseLimit?: {
-    maxAmount?: number
-    pastAmount?: boolean
-    prettyMaxAmount?: number | string
-  }
-  inventory?: {
-    totalSupply?: number
-    totalSold?: number
-    prettyInventory?: string
-  }
-  balance?: {
-    walletLimit: boolean
-    walletBalance: number | string
-  }
-  mintStatus?: {
-    text?: string
-    isEnded?: boolean
-    isActive?: boolean
-    startDate?: {
-      iso?: Date | string
-      unixtime?: number | string
-      pretty?: string
-    }
-    endDate?: {
-      iso?: Date | string
-      unixtime?: number | string
-      pretty?: string
-    }
-  }
-}
-
-const DropsContractContext = React.createContext<DropsContractReturnTypes>({
-  purchase: () => {},
-  onMintCallback: () => {},
-  transaction: {
-    purchaseData: undefined,
-    purchaseLoading: false,
-    purchaseSuccess: false,
-    txHash: undefined,
-  },
-  setMintQuantity: undefined,
-  collectionData: undefined,
-  collectionAddress: undefined,
-  networkId: '1',
-  totalPrice: undefined,
-  mintQuantity: DEFAULT_MINT_QUANTITY,
-  errors: {
-    unpredictableGasLimit: false,
-    insufficientFunds: false,
-  },
-  purchaseLimit: {
-    maxAmount: undefined,
-    pastAmount: undefined,
-    prettyMaxAmount: undefined,
-  },
-  inventory: {
-    totalSupply: undefined,
-    totalSold: undefined,
-    prettyInventory: undefined,
-  },
-  balance: {
-    walletLimit: false,
-    walletBalance: undefined,
-  },
-  mintStatus: {
-    text: undefined,
-    isEnded: undefined,
-    isActive: undefined,
-    startDate: {
-      iso: undefined,
-      unixtime: undefined,
-      pretty: undefined,
-    },
-    endDate: {
-      iso: undefined,
-      unixtime: undefined,
-      pretty: undefined,
-    },
-  },
-})
-
-export function useDropsContractProvider() {
-  return React.useContext(DropsContractContext)
-}
+const DropsContractContext = React.createContext<DropsContractReturnTypes>(
+  {} as DropsContractReturnTypes
+)
 
 export function DropsContractProvider({
   children,
   collectionAddress,
   networkId = '1',
+  ipfsGateway,
+  refreshInterval = 10000,
   onSuccessCallback = () => {},
   onMintCallback = () => {},
-}: DropsContractProps) {
+}: DropsContractProviderProps) {
   const { data: collectionData } = useSWRDrop({
     contractAddress: collectionAddress,
     networkId: networkId,
+    refreshInterval: refreshInterval,
+    ipfsGateway: ipfsGateway,
   })
-
+  const [error, setError] = React.useState<any | undefined>(undefined)
+  const [purchaseLoading, setPurchaseLoading] = React.useState(false)
+  const [purchaseSuccess, setPurchaseSuccess] = React.useState(false)
+  const [purchaseData, setPurchaseData] = React.useState<undefined | any>(undefined)
   const [mintQuantity, setMintQuantity] = React.useState(DEFAULT_MINT_QUANTITY)
+
+  const { address } = useAccount()
+
+  const saleStatus = useSaleStatus({ collectionData: collectionData })
+
+  const { allowlistEntry, accessAllowed } = useAllowlistEntry({
+    merkleRoot: saleStatus?.presaleMerkleRoot,
+    address: address,
+  })
 
   const handleUpdateMintQuantity = React.useCallback(
     (event: any) => {
@@ -167,26 +73,88 @@ export function DropsContractProvider({
     }
   }, [collectionData, collectionData?.salesConfig?.publicSalePrice, mintQuantity])
 
-  const { address } = useAccount()
-
   const { data: balanceOf } = useContractRead({
     addressOrName: collectionAddress,
     contractInterface: zoraDropsABI.abi,
     functionName: 'balanceOf',
     args: [address],
-    watch: true,
+    watch: false,
+    cacheOnBlock: true,
+    enabled: false,
   })
 
-  const { config, error } = usePrepareContractWrite({
-    addressOrName: collectionAddress,
-    contractInterface: zoraDropsABI.abi,
-    functionName: 'purchase',
-    args: [mintQuantity.queryValue],
-    overrides: {
-      value: totalPurchasePrice,
+  /* initialize contract */
+  const { data: signer } = useSigner()
+
+  const drop = React.useMemo(
+    () => (signer ? new ERC721Drop__factory(signer).attach(collectionAddress) : null),
+    [signer, collectionAddress]
+  )
+
+  const checkHasContract = React.useCallback(
+    async (address: string) => {
+      const code = await signer?.provider?.getCode(address)
+      if ((code?.length || 0) <= 2) {
+        console.error('Request is on the wrong network')
+      }
     },
-  })
+    [signer]
+  )
 
+  /* PublicSale Purchase */
+  const purchase = React.useCallback(async () => {
+    if (!drop || !collectionData?.salesConfig) return
+    await checkHasContract(drop.address)
+    try {
+      const tx = await drop.purchase(mintQuantity.queryValue, {
+        value: totalPurchasePrice,
+      })
+      setPurchaseLoading(true)
+      setPurchaseData(tx)
+      if (tx) {
+        await tx.wait(2)
+        setPurchaseLoading(false)
+        setPurchaseSuccess(true)
+        onSuccessCallback()
+      }
+      return tx
+    } catch (err) {
+      setError(err)
+    }
+  }, [drop, collectionData?.salesConfig, mintQuantity?.queryValue])
+
+  /* PreSale Purchase */
+  const purchasePresale = React.useCallback(
+    async (quantity: number, allowlistEntry?: AllowListEntry) => {
+      if (!drop || !allowlistEntry) return
+      await checkHasContract(drop.address)
+      try {
+        const tx = await drop.purchasePresale(
+          quantity,
+          allowlistEntry.maxCanMint,
+          BigNumber.from(allowlistEntry.price),
+          allowlistEntry.proof.map((e: any) => `0x${e}`),
+          {
+            value: BigNumber.from(allowlistEntry.price).mul(BigNumber.from(quantity)),
+          }
+        )
+        setPurchaseLoading(true)
+        setPurchaseData(tx)
+        if (tx) {
+          await tx.wait(2)
+          setPurchaseLoading(false)
+          setPurchaseSuccess(true)
+          onSuccessCallback()
+        }
+        return tx
+      } catch (err) {
+        setError(err)
+      }
+    },
+    [drop]
+  )
+
+  /* Checks */
   const insufficientFunds = React.useMemo(() => {
     if (error) {
       /* @ts-ignore */
@@ -201,14 +169,19 @@ export function DropsContractProvider({
     }
   }, [error])
 
+  const maxPerAddress = React.useMemo(() => {
+    return saleStatus?.presaleIsActive && allowlistEntry
+      ? allowlistEntry?.maxCanMint
+      : Number(collectionData?.salesConfig?.maxSalePurchasePerAddress) || 1
+  }, [collectionData, mintQuantity, saleStatus, allowlistEntry])
+
   const purchaseLimit = React.useMemo(() => {
-    const maxPerAddress = collectionData?.salesConfig?.maxSalePurchasePerAddress || 1
     return {
       maxAmount: maxPerAddress,
       pastAmount: mintQuantity.queryValue > Number(maxPerAddress),
-      prettyMaxAmount: maxPerAddress === '4294967295' ? '∞' : maxPerAddress,
+      prettyMaxAmount: maxPerAddress === 4294967295 ? '∞' : maxPerAddress,
     }
-  }, [collectionData, mintQuantity])
+  }, [mintQuantity, maxPerAddress])
 
   const inventory = React.useMemo(() => {
     return {
@@ -225,34 +198,25 @@ export function DropsContractProvider({
   const balance = React.useMemo(() => {
     try {
       return {
-        walletLimit: balanceOf >= purchaseLimit?.maxAmount,
-        walletBalance: balanceOf && balanceOf.toString(),
+        walletLimit: balanceOf >= maxPerAddress,
+        walletBalance: Number(balanceOf),
       }
     } catch (err) {
       console.error(err)
     }
-  }, [purchaseLimit, balanceOf])
+  }, [purchaseLimit, balanceOf, maxPerAddress])
 
   const prettyPurchasePrice = React.useMemo(() => {
     try {
       return totalPurchasePrice ? ethers.utils.formatUnits(totalPurchasePrice) : ''
     } catch (err) {
-      console.error(err)
+      // console.error(err)
     }
   }, [totalPurchasePrice])
 
-  const {
-    write: purchase,
-    data: purchaseData,
-    isLoading: purchaseLoading,
-    isSuccess: purchaseSuccess,
-  } = useContractWrite({
-    ...config,
-    onSuccess() {
-      onSuccessCallback()
-    },
-  })
-
+  /**
+   * TODO: Remove the below
+   */
   const startDate = React.useMemo(() => {
     if (collectionData?.salesConfig?.publicSaleStart) {
       const isoDate = new Date(
@@ -295,13 +259,17 @@ export function DropsContractProvider({
   return (
     <DropsContractContext.Provider
       value={{
+        collectionAddress: collectionAddress,
+        networkId: networkId,
+        ipfsGateway,
         collectionData,
         onMintCallback: onMintCallback,
         purchase,
+        purchasePresale,
         transaction: {
-          purchaseData,
-          purchaseLoading,
-          purchaseSuccess,
+          purchaseData: purchaseData,
+          purchaseLoading: purchaseLoading,
+          purchaseSuccess: purchaseSuccess,
           txHash: purchaseData && purchaseData?.hash,
         },
         mintQuantity,
@@ -310,8 +278,6 @@ export function DropsContractProvider({
           raw: totalPurchasePrice,
           pretty: prettyPurchasePrice,
         },
-        collectionAddress: collectionAddress,
-        networkId: networkId,
         errors: {
           insufficientFunds: insufficientFunds,
           unpredictableGasLimit: unpredictableGasLimit,
@@ -326,8 +292,17 @@ export function DropsContractProvider({
           startDate: startDate,
           endDate: endDate,
         },
+        saleStatus: saleStatus,
+        allowList: {
+          allowlistEntry,
+          accessAllowed,
+        },
       }}>
       {children}
     </DropsContractContext.Provider>
   )
+}
+
+export function useDropsContractProvider() {
+  return React.useContext(DropsContractContext)
 }

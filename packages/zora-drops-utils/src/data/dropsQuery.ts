@@ -1,15 +1,20 @@
 import { gql } from 'graphql-request'
 
-export const EDITIONS_STYLE_CONTRACT_METADATA = gql`
+export const ERC721_DROPS_CONTRACT_METADATA = gql`
   fragment ERC721Fields on ERC721Drop {
     name
     owner
     symbol
+    contractURI
     salesConfig {
+      id
       publicSalePrice
+      maxSalePurchasePerAddress
       publicSaleStart
       publicSaleEnd
-      maxSalePurchasePerAddress
+      presaleStart
+      presaleEnd
+      presaleMerkleRoot
     }
     address
     maxSupply
@@ -17,18 +22,17 @@ export const EDITIONS_STYLE_CONTRACT_METADATA = gql`
     editionMetadata {
       imageURI
       animationURI
-      contractURI
       description
     }
     creator
   }
 `
 
-export const EDITION_QUERY = gql`
+export const DROPS_QUERY = gql`
   query editionsStyleDropMetadataerc721Drops($collectionAddress: String!) {
     erc721Drop(id: $collectionAddress) {
       ...ERC721Fields
     }
   }
-  ${EDITIONS_STYLE_CONTRACT_METADATA}
+  ${ERC721_DROPS_CONTRACT_METADATA}
 `

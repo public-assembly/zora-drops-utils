@@ -1,5 +1,7 @@
-import React from 'react'
+/* @ts-ignore */
+import * as React from 'react'
 import { DropsContractProvider } from './../context/DropsContractProvider'
+import { DropsContractProps } from '../typings'
 
 import {
   Metadata,
@@ -10,31 +12,28 @@ import {
   TxStatus,
 } from './drop-components'
 
+interface DropsMinter extends React.HTMLAttributes<HTMLElement> {}
+
 export function DropsMinter({
   collectionAddress,
   networkId = '1',
-  successCallback,
-}: {
-  collectionAddress?: string
-  networkId?: '1' | '5'
-  successCallback?: () => void
-}) {
-  const onSuccess = React.useCallback(() => {
-    if (successCallback) {
-      successCallback()
-    }
-  }, [])
-
+  ipfsGateway,
+  refreshInterval,
+  ...props
+}: DropsContractProps & DropsMinter) {
   if (!collectionAddress) return null
-
   return (
     <DropsContractProvider
       collectionAddress={collectionAddress}
       networkId={networkId}
-      onSuccessCallback={onSuccess}>
+      ipfsGateway={ipfsGateway}
+      refreshInterval={refreshInterval}>
       <div
-        className={`drops-ui__minter--wrapper border-1 grid grid-cols-3 gap-4 rounded-xl border border-solid p-4`}>
-        <Thumbnail />
+        className={`drops-ui__minter--wrapper border-1 grid w-full gap-4 rounded-xl border border-solid p-4`}
+        {...props}>
+        <div className="relative col-span-2 w-full">
+          <Thumbnail />
+        </div>
         <div className="drops-ui__minter--ui-wrapper col-span-2 flex h-full flex-col justify-between">
           <Metadata />
           <hr className="drops-ui__minter--separator my-2"></hr>
@@ -42,8 +41,8 @@ export function DropsMinter({
           <hr className="drops-ui__minter--separator my-2"></hr>
           <TxStatus />
           <div className="drops-ui__minter--form-wrapper grid grid-cols-2 gap-2">
-            <MintButton />
-            <MintQuantity />
+            <MintButton className="flex w-full items-center" />
+            <MintQuantity className="w-full" />
           </div>
         </div>
       </div>
