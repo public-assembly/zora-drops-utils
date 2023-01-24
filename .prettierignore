@@ -2,9 +2,9 @@ node_modules
 .next
 .idea
 
-examples/**/dist/**
-examples/**/.next
-examples/**/node_modules/**
-examples/**/.env.local
+apps/**/dist/**
+apps/**/.next
+apps/**/node_modules/**
+apps/**/.env.local
 
 packages/**/dist/**
