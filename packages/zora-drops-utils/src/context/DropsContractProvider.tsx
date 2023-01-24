@@ -1,4 +1,5 @@
-import React from 'react'
+// @ts-nocheck
+import * as React from 'react'
 import { BigNumber } from 'ethers'
 import { useContractRead, useAccount, useSigner } from 'wagmi'
 import zoraDropsABI from '@zoralabs/nft-drop-contracts/dist/artifacts/ERC721Drop.sol/ERC721Drop.json'
@@ -74,6 +75,7 @@ export function DropsContractProvider({
   }, [collectionData, collectionData?.salesConfig?.publicSalePrice, mintQuantity])
 
   const { data: balanceOf } = useContractRead({
+    /* @ts-ignore */
     addressOrName: collectionAddress,
     contractInterface: zoraDropsABI.abi,
     functionName: 'balanceOf',

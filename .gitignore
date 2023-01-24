@@ -14,10 +14,10 @@ node_modules
 !.yarn/sdks
 !.yarn/versions
 
-examples/**/dist/**
-examples/**/.next
-examples/**/node_modules/**
-examples/**/.env.local
+apps/**/dist/**
+apps/**/.next
+apps/**/node_modules/**
+apps/**/.env.local
 
 # local env files (followinf dotenv-flow / nextjs convention)
 .env.local
@@ -37,9 +37,8 @@ yarn-error.log*
 packages/**/npm-debug.log*
 packages/**/yarn-debug.log*
 packages/**/yarn-error.log*
-
-examples/**/npm-debug.log*
-examples/**/yarn-debug.log*
-examples/**/yarn-error.log*
+apps**/npm-debug.log*
+apps/**/yarn-debug.log*
+apps/**/yarn-error.log*
 
 *.tsbuildinfo
